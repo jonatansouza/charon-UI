@@ -1,0 +1,21 @@
+<h2 class="text-center">Servers</h2>
+<div class="row">
+    <div class="col-lg-12">
+        <div ng-repeat="server in servers track by $index">
+            <div class="col-sm-6 col-md-4">
+
+                <div class="thumbnail">
+                    <div class="text-center">
+                        <i class="fa fa-desktop fa-4x" aria-hidden="true"></i>
+                    </div>
+                    <div class="caption text-center">
+                        <h3>{{server.name}}</h3>
+                        <p>
+                          <b>Status: </b>{{server.status}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
