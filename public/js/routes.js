@@ -8,6 +8,14 @@ angular.module('charon', ['ngRoute'])
                 templateUrl: 'partials/instances.html',
                 controller: 'InstancesController'
             })
+            .when('/editInstance', {
+                templateUrl: 'partials/editInstance.html',
+                controller: 'EditController'
+            })
+            .when('/createInstance', {
+                templateUrl: 'partials/createInstance.html',
+                controller: 'CreateController'
+            })
             .otherwise({
                 redirectTo: '/home'
             });
