@@ -5,16 +5,28 @@ angular.module('charon', ['ngRoute'])
                 controller: 'HomeController'
             })
             .when('/instances', {
-                templateUrl: 'partials/instances.html',
+                templateUrl: 'partials/instances/instances.html',
                 controller: 'InstancesController'
             })
             .when('/editInstance', {
-                templateUrl: 'partials/editInstance.html',
+                templateUrl: 'partials/instances/editInstance.html',
                 controller: 'EditController'
             })
             .when('/createInstance', {
-                templateUrl: 'partials/createInstance.html',
+                templateUrl: 'partials/instances/createInstance.html',
                 controller: 'CreateController'
+            })
+            .when('/volumes', {
+                templateUrl: 'partials/volumes/volumes.html',
+                controller: 'VolumesController'
+            })
+            .when('/createVolume', {
+                templateUrl: 'partials/volumes/createVolume.html',
+                controller: 'VolumesCreateController'
+            })
+            .when('/info', {
+                templateUrl: 'partials/info/info.html',
+                controller: 'InfoController'
             })
             .otherwise({
                 redirectTo: '/home'

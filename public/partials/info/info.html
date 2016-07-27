@@ -1,0 +1,55 @@
+
+<div class="row">
+    <div class="col-lg-6">
+        <h2 class="text-center">Images</h2>
+        <div ng-repeat="image in images track by $index">
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="text-center">
+                        <i class="fa fa-linux fa-4x" aria-hidden="true"></i>
+                    </div>
+                    <div class="caption text-center">
+                        <h3 class="text-info">{{image.name}}</h3>
+                        <p>
+                            <b>Status: </b>{{image.status}}
+                        </p>
+                        <p>
+                            <b>Created: </b>{{image.created | date:'MM/dd/yyyy HH:MM'}}
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="col-lg-6">
+        <h2 class="text-center">Flavors</h2>
+        <div ng-repeat="flavor in flavors track by $index">
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="text-center">
+                        <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
+                    </div>
+                    <div class="caption text-center">
+                        <h3 class="text-info">{{flavor.name}}</h3>
+                        <p>
+                            <b>Disk: </b>{{flavor.disk}} GB
+                        </p>
+                        <p>
+                            <b>Memory: </b>{{flavor.ram}} MB
+                        </p>
+
+                        <p>
+                            <b>Cpu's: </b>{{flavor.vcpus}}
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
