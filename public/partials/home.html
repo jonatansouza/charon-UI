@@ -1,27 +1,34 @@
 <div class="jumbotron">
-    <h1><strong>{{project}}</strong><br><small>Middleware to IoT devices and cloud</small></h1>
+    <h1 class="text-center"><strong>{{project}}</strong><br><small>Middleware to IoT devices and cloud</small></h1>
 </div>
 <div class="text-center">
-
-    <h2>
-        General Information
-  </h2>
-    <strong>Connected to openstack version {{version}}</strong>
-    <ul>
-        <li><b>Ram Size: </b>{{limits.absolute.maxTotalRAMSize}}</li>
-        <li><b>Cores: </b>{{limits.absolute.maxTotalCores}}</li>
-        <li><b>Total Instances: </b>{{limits.absolute.maxTotalInstances}}</li>
-        <li><b>Server Meta: </b>{{limits.absolute.maxServerMeta}}</li>
-        <li><b>Personality: </b>{{limits.absolute.maxPersonality}}</li>
-        <li><b>Personality Size: </b>{{limits.absolute.maxPersonalitySize}}</li>
-        <li><b>Server Groups Used:  </b>{{limits.absolute.totalServerGroupsUsed}}</li>
-        <li><b>Image Meta: </b>{{limits.absolute.maxImageMeta}}</li>
-        <li><b>Key Pairs: </b>{{limits.absolute.maxTotalKeypairs}}</li>
-        <li><b>Security Group Rules:  </b>{{limits.absolute.maxSecurityGroupRules}}</li>
-        <li><b>Float Ips</b>{{limits.absolute.maxTotalFloatingIps}}</li>
-        <li><b>Float Ips Used: </b>{{limits.absolute.totalFloatingIpsUsed}}</li>
-        <li><b>Server Group Members:  </b>{{limits.absolute.maxServerGroupMembers}}</li>
-        <li><b>Security Groups Used: </b>{{limits.absolute.totalSecurityGroupsUsed}}</li>
-    </ul>
+    <div ng-if="charonAPI">
+        <h2>
+        General Information<br>
+          <small>
+            <strong>Connected to openstack version {{version}}</strong>
+          </small>
+      </h2>
+        <ul>
+            <li><b>Ram Size: </b>{{limits.absolute.maxTotalRAMSize}}</li>
+            <li><b>Cores: </b>{{limits.absolute.maxTotalCores}}</li>
+            <li><b>Total Instances: </b>{{limits.absolute.maxTotalInstances}}</li>
+            <li><b>Server Meta: </b>{{limits.absolute.maxServerMeta}}</li>
+            <li><b>Personality: </b>{{limits.absolute.maxPersonality}}</li>
+            <li><b>Personality Size: </b>{{limits.absolute.maxPersonalitySize}}</li>
+            <li><b>Server Groups Used:  </b>{{limits.absolute.totalServerGroupsUsed}}</li>
+            <li><b>Image Meta: </b>{{limits.absolute.maxImageMeta}}</li>
+            <li><b>Key Pairs: </b>{{limits.absolute.maxTotalKeypairs}}</li>
+            <li><b>Security Group Rules:  </b>{{limits.absolute.maxSecurityGroupRules}}</li>
+            <li><b>Float Ips</b>{{limits.absolute.maxTotalFloatingIps}}</li>
+            <li><b>Float Ips Used: </b>{{limits.absolute.totalFloatingIpsUsed}}</li>
+            <li><b>Server Group Members:  </b>{{limits.absolute.maxServerGroupMembers}}</li>
+            <li><b>Security Groups Used: </b>{{limits.absolute.totalSecurityGroupsUsed}}</li>
+        </ul>
+    </div>
+    <div ng-if="!charonAPI">
+        <i class="fa fa-spinner fa-spin fa-4x " aria-hidden="true"></i>
+        <h2>Connecting to Charon-API<br><small>Located @ {{charonLocate}}</small></h2>
+    </div>
 
 </div>
