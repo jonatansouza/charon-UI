@@ -1,11 +1,12 @@
 angular.module('charon').controller('VolumesCreateController',
-    function($scope, $routeParams, $http, $location) {
+    function(init, $scope, $routeParams, $http, $location) {
         $scope.nameVolume = '';
         $scope.sizeVolume = 5;
+        $scope.charonLocate = init.protocol+init.url+':'+init.port;
 
         $http({
             method: 'GET',
-            url: 'http://localhost:3000/api/openstack/volumes/types'
+            url: $scope.charonLocate+'/api/openstack/volumes/types'
         }).then(function(data) {
             $scope.types = data.data;
             $scope.typeSelected = $scope.types[0].name;
@@ -25,9 +26,10 @@ angular.module('charon').controller('VolumesCreateController',
             $http({
                 method: 'POST',
                 data: data,
-                url: 'http://localhost:3000/api/openstack/volumes'
+                url: $scope.charonLocate+'/api/openstack/volumes'
             }).then(function(data) {
                 console.log(data);
+                $location.path('/volumes')
             }, function(err) {
                 console.log(err);
             });

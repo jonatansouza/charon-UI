@@ -1,8 +1,9 @@
 angular.module('charon').controller('InfoController',
-    function($scope, $routeParams, $http, $location) {
+    function(init, $scope, $routeParams, $http, $location) {
+      $scope.charonLocate = init.protocol+init.url+':'+init.port;
         $http({
             method: 'GET',
-            url: 'http://localhost:3000/api/openstack/images'
+            url: $scope.charonLocate+'/api/openstack/images'
         }).then(function(data) {
             $scope.images = data.data;
 
@@ -11,7 +12,7 @@ angular.module('charon').controller('InfoController',
         });
         $http({
             method: 'GET',
-            url: 'http://localhost:3000/api/openstack/flavors/'
+            url: $scope.charonLocate+'/api/openstack/flavors/'
         }).then(function(data) {
             $scope.flavors = data.data;
 

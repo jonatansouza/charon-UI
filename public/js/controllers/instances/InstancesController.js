@@ -1,10 +1,9 @@
 angular.module('charon').controller('InstancesController',
-    function($scope, $routeParams, $http, $location) {
-        console.log($routeParams.id);
-
+    function(init, $scope, $routeParams, $http, $location) {
+        $scope.charonLocate = init.protocol + init.url + ':' + init.port;
         $http({
             method: 'GET',
-            url: 'http://localhost:3000/api/openstack/servers'
+            url: $scope.charonLocate+'/api/openstack/servers'
         }).then(function(data) {
             $scope.servers = data.data;
         }, function(err) {

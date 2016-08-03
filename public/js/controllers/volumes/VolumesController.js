@@ -1,10 +1,12 @@
 angular.module('charon').controller('VolumesController',
-    function($scope, $routeParams, $http, $location) {
+    function(init, $scope, $routeParams, $http, $location) {
+        $scope.charonLocate = init.protocol + init.url + ':' + init.port;
         $http({
             method: 'GET',
-            url: 'http://localhost:3000/api/openstack/volumes'
+            url: $scope.charonLocate + '/api/openstack/volumes'
         }).then(function(data) {
             $scope.volumes = data.data;
+            $location.path('/volumes');
         }, function(err) {
             console.log(err);
         });

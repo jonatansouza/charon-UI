@@ -1,6 +1,6 @@
 <div class="col-lg-6">
 
-<form class="form-horizontal">
+<form class="form-horizontal"  ng-submit="createInstance()">
 
   <div class="form-group">
     <label for="instance" class="col-sm-2 control-label">Name</label>
@@ -22,7 +22,7 @@
   </div>
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-      <button ng-submit="createInstance(instance)" class="btn btn-default">Create</button>
+      <button type="submit" class="btn btn-default">Create</button>
     </div>
   </div>
 </form>
