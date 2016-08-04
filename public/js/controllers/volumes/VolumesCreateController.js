@@ -1,5 +1,5 @@
 angular.module('charon').controller('VolumesCreateController',
-    function(init, $scope, $routeParams, $http, $location) {
+    function(defaultMessages, init, $scope, $routeParams, $http, $location) {
         $scope.nameVolume = '';
         $scope.sizeVolume = 5;
         $scope.charonLocate = init.protocol+init.url+':'+init.port;
@@ -29,9 +29,10 @@ angular.module('charon').controller('VolumesCreateController',
                 url: $scope.charonLocate+'/api/openstack/volumes'
             }).then(function(data) {
                 console.log(data);
-                $location.path('/volumes')
+                $location.path('/volumes').search({status:'ok', message: defaultMessages.volumes});
             }, function(err) {
                 console.log(err);
+                $location.path('/volumes').search({status:'fail', message: err});
             });
 
         };

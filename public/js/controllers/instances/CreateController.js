@@ -1,5 +1,5 @@
 angular.module('charon').controller('CreateController',
-    function(init, $scope, $routeParams, $http, $location) {
+    function(defaultMessages, init, $scope, $routeParams, $http, $location) {
         $scope.charonLocate = init.protocol+init.url+':'+init.port;
         $scope.nameInstance = 'Sample';
         $http({
@@ -36,11 +36,11 @@ angular.module('charon').controller('CreateController',
                 url: $scope.charonLocate+'/api/openstack/servers'
             }).then(function(data) {
                 console.log(data);
-                $location.path('/instances');
+                $location.path('/instances').search({status:'ok', message: defaultMessages.instances});
             }, function(err) {
                 console.log(err);
+                $location.path('/instances').search({status:'fail', message: err});
             });
-
         };
 
     });

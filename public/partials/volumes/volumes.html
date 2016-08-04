@@ -1,3 +1,10 @@
+<div ng-if="hideMessage">
+    <div ng-class="typeMessage()" role="alert">
+        <strong>{{alertMessage}}</strong>
+    </div>
+</div>
+
+
 <div class="row">
     <div class="col-lg-12">
         <a href="#/createVolume" class="btn btn-primary">

@@ -1,6 +1,11 @@
+<div ng-if="hideMessage">
+    <div ng-class="typeMessage()" role="alert">
+        <strong>{{alertMessage}}</strong>
+    </div>
+</div>
 <div class="row">
     <div class="col-lg-12">
-        <a href="#/createInstance" class="btn btn-primary"> 
+        <a href="#/createInstance" class="btn btn-primary">
             <i class="fa fa-plus"></i>
         </a>
         <h3 class="text-center">Servers</h3>
@@ -10,21 +15,29 @@
 <div class="row">
     <div class="col-lg-12">
         <div ng-repeat="server in servers track by $index">
-            <a href="#/editInstance?id={{server.id}}">
-                <div class="col-sm-6 col-md-4">
-                    <div class="thumbnail">
-                        <div class="text-center">
-                            <i class="fa fa-desktop fa-4x" aria-hidden="true"></i>
-                        </div>
-                        <div class="caption text-center">
-                            <h3>{{server.name}}</h3>
-                            <p>
-                                <b>Status: </b>{{server.status}}
-                            </p>
-                        </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <div class="text-center">
+                        <i class="fa fa-desktop fa-4x" aria-hidden="true"></i>
+
                     </div>
+                    <div class="caption text-center">
+                        <a href="#/editInstance?id={{server.id}}">
+
+                            <h3>{{server.name}}</h3>
+                        </a>
+                        <p>
+                            <b>Status: </b>{{server.status}}
+                        </p>
+                        <p class="text-right">
+                            <a ng-click="destroyInstance()">
+                                <i class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+                        </p>
+                    </div>
+
                 </div>
-            </a>
+            </div>
+
         </div>
     </div>
 </div>
