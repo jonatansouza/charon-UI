@@ -1,4 +1,4 @@
-angular.module('charon', ['ngRoute'])
+angular.module('charon', ['ngRoute', 'ngBootbox'])
     .config(function($routeProvider) {
         $routeProvider.when('/home', {
                 templateUrl: 'partials/home.html',

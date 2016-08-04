@@ -1,14 +1,15 @@
 angular.module('charon').controller('InstancesController',
 
-    function(init, $scope, $routeParams, $http, $location, $timeout) {
+    function(init, $scope, $routeParams, $http, $location, $timeout, $interval, $ngBootbox) {
 
         $scope.charonLocate = init.protocol + init.url + ':' + init.port;
         $scope.alertMessage = $routeParams.message || '';
         $scope.hideMessage = true;
+        $scope.waiting = false;
 
         $timeout(function() {
             $scope.hideMessage = false;
-        }, 2000);
+        }, 10000);
 
         $http({
             method: 'GET',
@@ -19,19 +20,36 @@ angular.module('charon').controller('InstancesController',
             console.log(err);
         });
 
-        $scope.destroyInstance = function() {
-            /*  $ngBootbox.alert('An important message!')
-                  .then(function() {
-                      console.log('Alert closed');
-                  });*/
-            $http({
-                method: 'GET',
-                url: $scope.charonLocate + '/api/openstack/servers'
-            }).then(function(data) {
-                $scope.servers = data.data;
-            }, function(err) {
-                console.log(err);
-            });
+        $scope.destroyInstance = function(server, index) {
+            $ngBootbox.confirm('Delete <strong>' + server.name + '</strong> Instance?')
+                .then(function() {
+                    $http({
+                        method: 'DELETE',
+                        url: $scope.charonLocate + '/api/openstack/servers/' + server.id
+                    }).then(function(data) {
+                        $scope.waiting = true;
+                        var promisse = $interval(function() {
+                            $http({
+                                method: 'GET',
+                                url: $scope.charonLocate + '/api/openstack/instances/' + server.id
+                            }).then(function(data) {
+                                    console.log("attempt " + data.data.status);
+                            }, function(err) {
+                                $interval.cancel(promisse);
+                                $location.path('/instances').search({
+                                    status: 'ok',
+                                    message: 'Instance ' +server.name+ ' deleted!'
+                                });
+                            });
+                        }, 5000);
+                    }, function(err) {
+                        $location.path('/instances').search({
+                            status: "fail",
+                            message: err
+                        });
+                    });
+                });
+
         }
 
 

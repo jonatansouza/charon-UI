@@ -1,37 +1,52 @@
-<form class="form-horizontal col-lg-6" ng-submit="createVolume()" >
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="text-center">Volume</h1>
+    </div>
+    <div ng-if="waiting">
+        <div class="text-center">
+            <h3>Creating Volume<br><small>Please wait</small></h3>
+            <i class="fa fa-spinner fa-spin fa-5x"></i>
+        </div>
+    </div>
 
-    <div class="form-group">
-        <label for="instance" class="col-sm-2 control-label">Name</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="instance" ng-model="nameVolume" placeholder="Volume Name" required>
+</div>
+<div class="row" ng-if="!waiting">
+    <form class="form-horizontal col-lg-6" ng-submit="createVolume()">
+
+        <div class="form-group">
+            <label for="instance" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="instance" ng-model="nameVolume" placeholder="Volume Name" required>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label for="desc" class="col-sm-2 control-label">description</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="desc" ng-model="descriptionVolume" placeholder="Volume description" required>
+        <div class="form-group">
+            <label for="desc" class="col-sm-2 control-label">description</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="desc" ng-model="descriptionVolume" placeholder="Volume description" required>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label for="type" class="col-sm-2 control-label">Type</label>
-        <div class="col-sm-10">
-            <select class="form-control" ng-options="type as type.name for type in types track by flavor.id" ng-model="typeSelected"></select>
+        <div class="form-group">
+            <label for="type" class="col-sm-2 control-label">Type</label>
+            <div class="col-sm-10">
+                <select class="form-control" ng-options="type as type.name for type in types track by flavor.id" ng-model="typeSelected"></select>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label for="size" class="col-sm-2 control-label">Size</label>
-        <div class="col-sm-10">
-            <div class="">
-                <div class="range range-primary">
-                    <input type="range" name="range" min="1" max="10" ng-model="sizeVolume">
-                    <output>{{sizeVolume}}</output>
+        <div class="form-group">
+            <label for="size" class="col-sm-2 control-label">Size</label>
+            <div class="col-sm-10">
+                <div class="">
+                    <div class="range range-primary">
+                        <input type="range" name="range" min="1" max="10" ng-model="sizeVolume">
+                        <output>{{sizeVolume}}</output>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-default">Create</button>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Create</button>
+            </div>
         </div>
-    </div>
-</form>
+
+    </form>
+</div>

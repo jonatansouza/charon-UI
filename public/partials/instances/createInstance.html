@@ -1,30 +1,46 @@
-<div class="col-lg-6">
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="text-center">Server</h1>
+    </div>
+    <div  ng-if="waiting">
+        <div class="text-center">
+            <h3>Creating Instance<br><small>Please wait</small></h3>
+            <i class="fa fa-spinner fa-spin fa-5x"></i>
+        </div>
+    </div>
 
-<form class="form-horizontal"  ng-submit="createInstance()">
+</div>
 
-  <div class="form-group">
-    <label for="instance" class="col-sm-2 control-label">Name</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="instance" ng-model="nameInstance" placeholder="Instance Name">
+
+<div ng-if="!waiting">
+    <div class="col-lg-6">
+
+        <form class="form-horizontal" ng-submit="createInstance()">
+
+            <div class="form-group">
+                <label for="instance" class="col-sm-2 control-label">Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="instance" ng-model="nameInstance" placeholder="Instance Name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="image" class="col-sm-2 control-label">Image</label>
+                <div class="col-sm-10">
+                    <select class="form-control" ng-options="image as image.name for image in images track by image.id" ng-model="imageSelected"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="flavor" class="col-sm-2 control-label">Flavor</label>
+                <div class="col-sm-10">
+                    <select class="form-control" ng-options="flavor as flavor.name for flavor in flavors track by flavor.id" ng-model="flavorSelected"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Create</button>
+                </div>
+            </div>
+        </form>
     </div>
-  </div>
-  <div class="form-group">
-    <label for="image" class="col-sm-2 control-label">Image</label>
-    <div class="col-sm-10">
-      <select class="form-control" ng-options="image as image.name for image in images track by image.id" ng-model="imageSelected"></select>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="flavor" class="col-sm-2 control-label">Flavor</label>
-    <div class="col-sm-10">
-      <select class="form-control" ng-options="flavor as flavor.name for flavor in flavors track by flavor.id" ng-model="flavorSelected"></select>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-default">Create</button>
-    </div>
-  </div>
-</form>
 
 </div>
