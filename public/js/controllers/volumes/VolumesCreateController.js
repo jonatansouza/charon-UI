@@ -1,6 +1,5 @@
 angular.module('charon').controller('VolumesCreateController',
     function(defaultMessages, init, $scope, $routeParams, $http, $location, $interval) {
-        $scope.nameVolume = '';
         $scope.sizeVolume = 5;
         $scope.charonLocate = init.protocol + init.url + ':' + init.port;
 
@@ -15,11 +14,11 @@ angular.module('charon').controller('VolumesCreateController',
         });
 
 
-        $scope.createVolume = function() {
+        $scope.createVolume = function(nameVolume, descriptionVolume, sizeVolume) {
             var data = {
-                'name': $scope.nameVolume,
-                'description': $scope.descriptionVolume,
-                'size': $scope.sizeVolume,
+                'name': nameVolume,
+                'description': descriptionVolume,
+                'size': sizeVolume,
                 'volumeType': $scope.typeSelected
             }
 

@@ -4,14 +4,14 @@
     </div>
     <div ng-if="waiting">
         <div class="text-center">
-            <h3>Creating Volume<br><small>Please wait</small></h3>
+            <h3>Creating Volume<br><small>Please wait<br>It may take several minutes</small></h3>
             <i class="fa fa-spinner fa-spin fa-5x"></i>
         </div>
     </div>
 
 </div>
 <div class="row" ng-if="!waiting">
-    <form class="form-horizontal col-lg-6" ng-submit="createVolume()">
+    <form class="form-horizontal col-lg-6" ng-submit="createVolume(nameVolume, descriptionVolume, sizeVolume)">
 
         <div class="form-group">
             <label for="instance" class="col-sm-2 control-label">Name</label>

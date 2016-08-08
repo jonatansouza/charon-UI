@@ -1,7 +1,7 @@
 angular.module('charon').controller('CreateController',
     function(defaultMessages, init, $scope, $routeParams, $http, $location, $interval) {
         $scope.charonLocate = init.protocol + init.url + ':' + init.port;
-        $scope.nameInstance = 'Sample';
+        $scope.nameInstance = '';
         $scope.waiting = false;
 
         $http({
@@ -25,9 +25,9 @@ angular.module('charon').controller('CreateController',
             console.log(err);
         });
 
-        $scope.createInstance = function() {
+        $scope.createInstance = function(nameInstance) {
             var data = {
-                'name': $scope.nameInstance,
+                'name': nameInstance,
                 'image': $scope.imageSelected.id,
                 'flavor': $scope.flavorSelected.id
             }

@@ -24,7 +24,7 @@
 
 
 <div class="row" ng-if="!waiting">
-  <h3 class="text-info text-center" ng-if="volumes.length <= 0">No Volumes to list!</h3>
+    <h3 class="text-info text-center" ng-if="volumes.length <= 0">No Volumes to list!</h3>
     <div class="col-lg-12">
         <div ng-repeat="volume in volumes track by $index">
             <div class="col-sm-6 col-md-4">
@@ -41,8 +41,20 @@
                             <b>Description: </b>{{volume.description}}
                         </p>
                         <p>
+                            <b>Size: </b>{{volume.size}} GB
+                        </p>
+                        <p>
                             <b>Type: </b>{{volume.volumeType}}
                         </p>
+                        <span ng-if="volume.attachments.length <= 0">
+                            <b>Attachments: <span class="text-success"> FREE</span></b>
+                        </span>
+                        <span ng-if="volume.attachments.length > 0">
+                          <p>
+                            <b>Attachments: </b>{{volume.attachments[0]}}
+                          </p>
+                        </span>
+
                         <p class="text-right">
                             <a ng-click="destroyVolume(volume, $index)">
                                 <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
