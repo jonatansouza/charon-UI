@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../vendor/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/custom.css">
+</head>
+
+<body class="container">
+    <form>
+        <label>Choice a instance to attach!</label>
+        <div class="form-group">
+          <div ng-repeat="server in servers">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="server" value="server.id" ng-model="serverToAttach"> <i class="fa fa-desktop" aria-hidden="true"></i>
+ {{server.name}}
+                </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary" ng-click="volumeAttach(serverToAttach)">Attach <i class="fa fa-paperclip" aria-hidden="true"></i></button>
+        </div>
+    </form>
+</body>
+
+</html>

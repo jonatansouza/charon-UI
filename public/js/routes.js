@@ -24,6 +24,10 @@ angular.module('charon', ['ngRoute', 'ngBootbox'])
                 templateUrl: 'partials/volumes/createVolume.html',
                 controller: 'VolumesCreateController'
             })
+            .when('/attachVolume', {
+                templateUrl: 'partials/volumes/attachVolume.html',
+                controller: 'VolumeAttachController'
+            })
             .when('/info', {
                 templateUrl: 'partials/info/info.html',
                 controller: 'InfoController'

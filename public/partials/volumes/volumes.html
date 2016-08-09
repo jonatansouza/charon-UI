@@ -30,10 +30,25 @@
             <div class="col-sm-6 col-md-4">
                 <div class="thumbnail">
                     <div class="text-center">
+                        <span class="col-lg-offset-1">
                         <i class="fa fa-database fa-4x" aria-hidden="true"></i>
+                        </span>
+                        <span class="pull-right" ng-if="volume.attachments.length <= 0">
+                          <a ng-click="volumeAttachOptions(volume.id)">
+                            <i class="fa fa-paperclip fa-4x" aria-hidden="true"></i>
+                            </a>
+                      </span>
+                        <span class="pull-right" ng-if="!volume.attachments.length <= 0">
+                        <a ng-click="volumeDetach(volume.attachments[0].server_id, volume.id)">
+                          <i class="fa fa-chain-broken fa-4x" aria-hidden="true"></i>
+                          </a>
+                    </span>
                     </div>
                     <div class="caption text-center">
                         <h3>{{volume.name}}</h3>
+                        <p>
+                            <b>ID: </b>{{volume.id}}
+                        </p>
                         <p>
                             <b>Status: </b>{{volume.status}}
                         </p>
@@ -47,12 +62,15 @@
                             <b>Type: </b>{{volume.volumeType}}
                         </p>
                         <span ng-if="volume.attachments.length <= 0">
-                            <b>Attachments: <span class="text-success"> FREE</span></b>
+                            <b>Attachments: <span class="text-success"> FREE</span>
                         </span>
                         <span ng-if="volume.attachments.length > 0">
                           <p>
-                            <b>Attachments: </b>{{volume.attachments[0]}}
-                          </p>
+                            <b>Attachments: </b>
+                            <span ng-repeat="server in servers | filter:volume.attachments[0].server_id">
+                              {{ server.name }}<br>
+                            </span>
+                        </p>
                         </span>
 
                         <p class="text-right">
