@@ -55,11 +55,13 @@
                 <td>Last update</td>
                 <td>{{server.updated | date:'MM/dd/yyyy HH:MM'}}</td>
             </tr>
-
         </tbody>
     </table>
 
 </div>
 <div class="row text-center">
-  <button class="btn btn-warning" ng-click="generateImage()">Generate image from this instance</button>
+
+  <button class="btn btn-default" ng-click="generateImage()" data-toggle="tooltip" data-placement="top" title="Generate image"><i class="fa fa-clone" aria-hidden="true"></i>
+</button>
+  <button class="btn btn-default" ng-click="remoteAccess(server)" data-toggle="tooltip" data-placement="right" title="remote access"><i class="fa fa-terminal" aria-hidden="true"></i></button>
 </div>

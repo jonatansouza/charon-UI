@@ -3,6 +3,10 @@ ul
     list-style-type: none;
 }
 
+.pointer{
+   cursor: pointer
+}
+
 /* ########### RANGE INPUT*/
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,300);
 @import url(http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);

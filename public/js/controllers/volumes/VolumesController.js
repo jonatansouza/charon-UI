@@ -1,12 +1,13 @@
 angular.module('charon').controller('VolumesController',
-    function(init, $scope, $routeParams, $http, $location, $interval, $timeout, $ngBootbox) {
+    function(defaultMessages, init, $scope, $routeParams, $http, $location, $interval, $timeout, $ngBootbox, $route) {
         $scope.charonLocate = init.protocol + init.url + ':' + init.port;
         $scope.alertMessage = $routeParams.message || '';
         $scope.hideMessage = true;
+        $scope.volumeToAttach = "";
 
         $timeout(function() {
             $scope.hideMessage = false;
-        }, 2000);
+        }, 10000);
 
 
         $http({
@@ -37,6 +38,7 @@ angular.module('charon').controller('VolumesController',
                         url: $scope.charonLocate + '/api/openstack/volumes/' + volume.id
                     }).then(function(data) {
                         $scope.waiting = true;
+                        $scope.waitingMessage = defaultMessages.deleteVolume;
                         var tmpVolume = data.data;
                         var promisse = $interval(function() {
                             $http({
@@ -96,28 +98,34 @@ angular.module('charon').controller('VolumesController',
                         method: 'POST',
                         data: data,
                         url: $scope.charonLocate + '/api/openstack/servers/volumes/detach'
-                    }).then(function(data) {
-                            $location.path('/volumes').search({
-                                status: 'ok',
-                                message: "Volume detached device! " + data.data
-                            });
-
+                    }).then(
+                        function(data){
+                            console.log('detach');
+                            $scope.waiting = true;
+                            $scope.waitingMessage = defaultMessages.detachVolume
+                            $ngBootbox.hideAll();
+                            var promisse = $interval(function() {
+                                $location.path('/volumes').search({
+                                    status: "ok",
+                                    message: "Volume dettached!"
+                                });
+                            }, 7000);
                         },
                         function(err) {
-                            $location.path('/instances').search({
-                                status: 'fail',
-                                message: "ERROR: " + JSON.stringify(err)
+                            console.log(err);
+                            $location.path('/volumes').search({
+                                status: "fail",
+                                message: err
                             });
                         });
-
-
                 },
                 function() {
-
+                    //
                 });
         };
 
         $scope.volumeAttachOptions = function(volumeId) {
+            $scope.volumeToAttach = volumeId;
             var options = {
                 scope: $scope,
                 templateUrl: '../templates/attachVolume.html'
@@ -125,7 +133,33 @@ angular.module('charon').controller('VolumesController',
             $ngBootbox.customDialog(options);
         };
 
-        $scope.volumeAttach = function(server){
-          console.log(server);
+        $scope.volumeAttach = function(serverId) {
+            var data = {
+                server: serverId,
+                volume: $scope.volumeToAttach
+            }
+            $http({
+                method: 'POST',
+                data: data,
+                url: $scope.charonLocate + '/api/openstack/servers/volumes/attach'
+            }).then(function(data) {
+                    $scope.waiting = true;
+                    $scope.waitingMessage = defaultMessages.attachVolume;
+                    $ngBootbox.hideAll();
+                    var promisse = $interval(function() {
+                        $scope.waiting = false;
+                        $location.path('/volumes').search({
+                            status: 'ok',
+                            message: "Volume attached!!!"
+                        });
+                        $interval.cancel(promisse);
+                    }, 10000);
+                },
+                function(err) {
+                    $location.path('/instances').search({
+                        status: 'fail',
+                        message: "ERROR: " + JSON.stringify(err)
+                    });
+                });
         }
     });

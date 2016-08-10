@@ -62,6 +62,10 @@ angular.module('charon').controller('EditController',
                     console.log('Prompt dismissed!');
                 });
 
+        };
+
+        $scope.remoteAccess = function(server) {
+            console.log(server);
         }
 
     });
