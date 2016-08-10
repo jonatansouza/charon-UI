@@ -20,4 +20,15 @@ angular.module('charon').controller('InfoController',
             console.log(err);
         });
 
+        $scope.deleteImage = function(image){
+          $http({
+            method: 'DELETE',
+            url: $scope.charonLocate+'/api/openstack/images/'+image.id
+          }).then(function(data){
+              console.log(data);
+          }, function(err){
+              console.log(err);
+          });
+        }
+
     });
