@@ -31,7 +31,7 @@ angular.module('charon').controller('InstancesController',
                         var promisse = $interval(function() {
                             $http({
                                 method: 'GET',
-                                url: $scope.charonLocate + '/api/openstack/instances/' + server.id
+                                url: $scope.charonLocate + '/api/openstack/servers/' + server.id
                             }).then(function(data) {
                                     console.log("attempt " + data.data.status);
                             }, function(err) {

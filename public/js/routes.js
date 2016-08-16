@@ -32,6 +32,10 @@ angular.module('charon', ['ngRoute', 'ngBootbox'])
                 templateUrl: 'partials/info/info.html',
                 controller: 'InfoController'
             })
+            .when('/networks', {
+                templateUrl: 'partials/networks/networks.html',
+                controller: 'NetworkController'
+            })
             .otherwise({
                 redirectTo: '/home'
             });
