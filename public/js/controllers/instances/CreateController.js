@@ -25,12 +25,14 @@ angular.module('charon').controller('CreateController',
             console.log(err);
         });
 
-        $scope.createInstance = function(nameInstance) {
+        $scope.createInstance = function(nameInstance, image, flavor) {
             var data = {
                 'name': nameInstance,
-                'image': $scope.imageSelected.id,
-                'flavor': $scope.flavorSelected.id
+                'image': image,
+                'flavor': flavor
             }
+
+            console.log(data);
 
             $http({
                 method: 'POST',

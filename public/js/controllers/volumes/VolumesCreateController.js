@@ -5,7 +5,7 @@ angular.module('charon').controller('VolumesCreateController',
 
         $http({
             method: 'GET',
-            url: $scope.charonLocate + '/api/openstack/volumes/types'
+            url: $scope.charonLocate + '/api/openstack/types'
         }).then(function(data) {
             $scope.types = data.data;
             $scope.typeSelected = $scope.types[0].name;
@@ -55,7 +55,5 @@ angular.module('charon').controller('VolumesCreateController',
                     message: err
                 });
             });
-
         };
-
     });
