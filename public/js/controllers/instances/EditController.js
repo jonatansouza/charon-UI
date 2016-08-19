@@ -63,6 +63,20 @@ angular.module('charon').controller('EditController',
                 });
 
         };
+        $scope.allocateIp = function(myServer) {
+
+            $http({
+                method: 'POST',
+                url: $scope.charonLocate + '/api/openstack/allocate',
+                data: {
+                    server: myServer
+                }
+            }).then(function(data) {
+                alert(data)
+            }, function(err) {
+                console.log(err);
+            });
+        };
 
         $scope.remoteAccess = function(server) {
             console.log(server);
