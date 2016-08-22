@@ -36,6 +36,14 @@ angular.module('charon', ['ngRoute', 'ngBootbox', 'angular-loading-bar'])
                 templateUrl: 'partials/networks/networks.html',
                 controller: 'NetworkController'
             })
+            .when('/security', {
+                templateUrl: 'partials/security/security.html',
+                controller: 'SecurityController'
+            })
+            .when('/createKey', {
+                templateUrl: 'partials/security/ssh.html',
+                controller: 'SshController'
+            })
             .otherwise({
                 redirectTo: '/home'
             });

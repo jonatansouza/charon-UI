@@ -53,7 +53,7 @@
                     <span ng-if="server.addresses.public.length >= 0">
                         {{server.addresses.public[0]}}
                     </span>
-                    <span ng-if="!server.addresses.public.length >= 0">
+                    <span ng-if="server.addresses.public.length <= 0">
                         <button ng-click="allocateIp(server.id)" class="btn btn-warning"> Allocate IP </button>
                     </span>
                 </td>

@@ -1,6 +1,10 @@
 angular.module('charon').controller('EditController',
-    function(init, $scope, $routeParams, $http, $location, $ngBootbox) {
+    function(init, $scope, $routeParams, $http, $location, $ngBootbox, $route) {
         $scope.charonLocate = init.protocol + init.url + ':' + init.port;
+        if (!$routeParams.id) {
+            $location.path('/instances');
+        }
+
         $http({
             method: 'GET',
             url: $scope.charonLocate + '/api/openstack/servers/' + $routeParams.id
@@ -72,9 +76,22 @@ angular.module('charon').controller('EditController',
                     server: myServer
                 }
             }).then(function(data) {
-                alert(data)
+
+                $ngBootbox.alert("ip " + data.data.ip.ip + ' attached to instance!').then(function() {
+                    $route.reload();
+                });
             }, function(err) {
-                console.log(err);
+                $ngBootbox.customDialog({
+                    message: '<span class="text-danger text-center">No ips available!</span>',
+                    title: '<b>Erro</b>',
+                    buttons: {
+                        ok: {
+                            label: "close",
+                            className: "btn-danger",
+                            callback: function() {}
+                        }
+                    }
+                });
             });
         };
 

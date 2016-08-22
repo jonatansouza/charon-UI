@@ -25,11 +25,32 @@ angular.module('charon').controller('CreateController',
             console.log(err);
         });
 
-        $scope.createInstance = function(nameInstance, image, flavor) {
+        $http({
+            method: 'GET',
+            url: $scope.charonLocate + '/api/openstack/keys'
+        }).then(function(data) {
+            $scope.keys = data.data;
+            $scope.keySelected = $scope.keys[0];
+        }, function(err) {
+            console.log(err);
+        });
+
+        $http({
+            method: 'GET',
+            url: $scope.charonLocate + '/api/openstack/groups'
+        }).then(function(data) {
+            $scope.groups = data.data;
+            $scope.groupSelected = $scope.groups[0];
+        }, function(err) {
+            console.log(err);
+        });
+
+        $scope.createInstance = function(nameInstance, image, flavor, key, group) {
             var data = {
                 'name': nameInstance,
                 'image': image,
-                'flavor': flavor
+                'flavor': flavor,
+                'keyname': key.keypair.name
             }
 
             console.log(data);
