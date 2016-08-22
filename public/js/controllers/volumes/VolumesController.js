@@ -97,7 +97,7 @@ angular.module('charon').controller('VolumesController',
                     $http({
                         method: 'POST',
                         data: data,
-                        url: $scope.charonLocate + '/api/openstack/servers/volumes/detach'
+                        url: $scope.charonLocate + '/api/openstack/detach'
                     }).then(
                         function(data){
                             console.log('detach');
@@ -109,6 +109,7 @@ angular.module('charon').controller('VolumesController',
                                     status: "ok",
                                     message: "Volume dettached!"
                                 });
+                                $interval.cancel(promisse);
                             }, 7000);
                         },
                         function(err) {
@@ -141,7 +142,7 @@ angular.module('charon').controller('VolumesController',
             $http({
                 method: 'POST',
                 data: data,
-                url: $scope.charonLocate + '/api/openstack/servers/volumes/attach'
+                url: $scope.charonLocate + '/api/openstack/attach'
             }).then(function(data) {
                     $scope.waiting = true;
                     $scope.waitingMessage = defaultMessages.attachVolume;
