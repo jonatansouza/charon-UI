@@ -46,12 +46,22 @@ angular.module('charon').controller('CreateController',
         });
 
         $scope.createInstance = function(nameInstance, image, flavor, key, group) {
-            var data = {
-                'name': nameInstance,
-                'image': image,
-                'flavor': flavor,
-                'keyname': key.keypair.name
+            var data;
+            if (typeof key === 'undefined') {
+                data = {
+                    'name': nameInstance,
+                    'image': image,
+                    'flavor': flavor
+                }
+            } else {
+                data = {
+                    'name': nameInstance,
+                    'image': image,
+                    'flavor': flavor,
+                    'keyname': key.keypair.name
+                }
             }
+
 
             console.log(data);
 
@@ -86,7 +96,7 @@ angular.module('charon').controller('CreateController',
                 function(err) {
                     $location.path('/instances').search({
                         status: 'fail',
-                        message: "ERROR: "+JSON.stringify(err)
+                        message: "ERROR: " + JSON.stringify(err)
                     });
                 });
         };
