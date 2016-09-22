@@ -4,7 +4,7 @@ Charon-UI
 
 ## Overview
 
-Interface to provide a enviroment to Charon-API
+Interface to provide a environment to Charon-API
 
 ## Requirements
 
