@@ -28,9 +28,13 @@ angular.module('charon', ['ngRoute', 'ngBootbox', 'angular-loading-bar'])
                 templateUrl: 'partials/volumes/attachVolume.html',
                 controller: 'VolumeAttachController'
             })
-            .when('/info', {
-                templateUrl: 'partials/info/info.html',
-                controller: 'InfoController'
+            .when('/templates', {
+                templateUrl: 'partials/templates/template.html',
+                controller: 'TemplateController'
+            })
+            .when('/flavors', {
+                templateUrl: 'partials/flavors/flavor.html',
+                controller: 'FlavorController'
             })
             .when('/networks', {
                 templateUrl: 'partials/networks/networks.html',

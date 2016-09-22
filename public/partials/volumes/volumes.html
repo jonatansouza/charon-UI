@@ -5,14 +5,15 @@
 </div>
 
 
-<div class="row">
+<div class="container-fluid">
     <div class="col-lg-12">
-        <a href="#/createVolume" class="btn btn-primary">
-            <i class="fa fa-plus"></i>
-        </a>
-        <h1 class="text-center">Volumes</h1>
+        <h1 class="page-header">
+            Volumes
+            <a href="#/createVolume" class="btn btn-primary pull-right">
+              <i class="fa fa-plus"></i>
+            </a>
+        </h1>
     </div>
-
     <div ng-if="waiting">
         <div class="text-center">
             <h3>{{waitingMessage}}<br><small>Please wait</small></h3>
@@ -78,8 +79,7 @@
                                 </a>
                             </li>
                             <li ng-if="!volume.attachments.length <= 0">
-                                <a class="pointer"
-                                ng-click="volumeDetach(volume.attachments[0].server_id, volume.id)">
+                                <a class="pointer" ng-click="volumeDetach(volume.attachments[0].server_id, volume.id)">
                                     <i class="fa fa-chain-broken" aria-hidden="true"></i> Detach
                                 </a>
                             </li>

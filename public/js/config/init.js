@@ -1,6 +1,6 @@
 angular.module('charon')
-.constant('init', {
-    protocol:'http://',
-    url:'146.134.235.249',
-    port:'3000'
-  });
+    .constant('init', {
+        protocol: 'http://',
+        url: '192.168.1.110',
+        port: '3000'
+    });

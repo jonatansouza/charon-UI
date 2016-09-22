@@ -1,0 +1,48 @@
+<div class="container-fluid">
+    <h1 class="page-header">Flavors</h1>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        <b>Name</b>
+                    </th>
+                    <th>
+                        <b>ID</b>
+                    </th>
+                    <th>
+                        <b>Disk</b>
+                    </th>
+                    <th>
+                        <b>Memory</b>
+                    </th>
+                    <th>
+                        <b>CPU's</b>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr ng-repeat="flavor in flavors | orderBy:'disk':false">
+                    <td>
+                        {{flavor.name}}
+                    </td>
+                    <td>
+                        {{flavor.id}}
+                    </td>
+                    <td>
+                        {{flavor.disk}} GB
+                    </td>
+                    <td>
+                        {{flavor.ram}} MB
+                    </td>
+                    <td>
+                        {{flavor.vcpus}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
