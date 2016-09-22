@@ -27,3 +27,5 @@ config file `public/js/config/init.js` with Charon-API address
 }
 
 ```
+
+`$ npm start`
