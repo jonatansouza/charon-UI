@@ -14,7 +14,6 @@ angular.module('charon').controller('CreateController',
             console.log(err);
         });
 
-
         $http({
             method: 'GET',
             url: $scope.charonLocate + '/api/openstack/flavors'
@@ -45,6 +44,20 @@ angular.module('charon').controller('CreateController',
             console.log(err);
         });
 
+        $http({
+            method: 'GET',
+            url: $scope.charonLocate + '/api/openstack/networks'
+        }).then(function(data) {
+            $scope.networks = data.data;
+            for(var i = 0; i < $scope.networks.length; i++){
+                if($scope.networks[i].name == 'private'){
+                  $scope.networkSelected = $scope.networks[i];
+                }
+            }
+        }, function(err) {
+            console.log(err);
+        });
+
         $scope.createInstance = function(nameInstance, image, flavor, key, group) {
             var data;
             if (typeof key === 'undefined') {
@@ -58,7 +71,10 @@ angular.module('charon').controller('CreateController',
                     'name': nameInstance,
                     'image': image,
                     'flavor': flavor,
-                    'keyname': key.keypair.name
+                    'keyname': key.keypair.name,
+                    'networks': [{
+                        'uuid': $scope.networkSelected.id
+                    }]
                 }
             }
 
@@ -94,9 +110,10 @@ angular.module('charon').controller('CreateController',
                     }, 5000);
                 },
                 function(err) {
+                    console.log(err);
                     $location.path('/instances').search({
                         status: 'fail',
-                        message: "ERROR: " + JSON.stringify(err)
+                        message: "ERROR: " + JSON.stringify(err.data.result)
                     });
                 });
         };
