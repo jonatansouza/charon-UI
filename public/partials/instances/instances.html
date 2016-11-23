@@ -26,16 +26,21 @@
                 <div class="thumbnail">
                     <div class="text-center">
                         <i class="fa fa-desktop fa-4x" aria-hidden="true"></i>
-
                     </div>
                     <div class="caption text-center">
                         <h3>{{server.name}}</h3>
                         <p>
-                            <b>ID: </b>{{server.id}}
+                            <b>Status: </b>{{server.status}}
                         </p>
 
                         <p>
-                            <b>Status: </b>{{server.status}}
+                            <b>Address:</b><br>
+                            Private:
+                            {{server.addresses.private[0].addr}}<br>
+                            <span ng-if="server.addresses.private.length > 1">
+                                Public:
+                                {{server.addresses.private[1].addr}}
+                              </span>
                         </p>
                     </div>
                     <div class="dropdown">
