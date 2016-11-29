@@ -42,13 +42,14 @@
                         <div class="text-success" ng-if="image.progress == 100">
                             <b>Completed!</b>
                         </div>
-                        <div class="text-success" ng-if="image.progress < 100">
+                        <div ng-if="image.progress < 100">
                             <div class="progress">
                                 <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{image.progress}} " aria-valuemin="0" aria-valuemax="100"
                                     style="width: {{image.progress}}%">
                                     <span class="sr-only">{{image.progress}} 40% Complete</span>
                                 </div>
                             </div>
+                            <span class=""><b>{{image.progress}} %</b></span>
                         </div>
                     </td>
                     <td>

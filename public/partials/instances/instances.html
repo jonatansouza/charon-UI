@@ -34,9 +34,8 @@
                         </p>
 
                         <p>
-                            <b>Address:</b><br>
-                            Private:
-                            {{server.addresses.private[0].addr}}<br>
+                            <b>Address:</b><br> Private: {{server.addresses.private[0].addr}}
+                            <br>
                             <span ng-if="server.addresses.private.length > 1">
                                 Public:
                                 {{server.addresses.private[1].addr}}
@@ -47,6 +46,9 @@
                         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             Options
                             <span class="caret"></span>
+                        </button>
+                        <button type="button" class="btn btn-default pull-right" ng-click="changeState(server)">
+                          <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li><a class="pointer " ng-click="destroyInstance(server, $index)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>

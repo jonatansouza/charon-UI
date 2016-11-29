@@ -33,12 +33,12 @@ angular.module('charon').controller('InstancesController',
                                 method: 'GET',
                                 url: $scope.charonLocate + '/api/openstack/servers/' + server.id
                             }).then(function(data) {
-                                    console.log("attempt " + data.data.status);
+                                console.log("attempt " + data.data.status);
                             }, function(err) {
                                 $interval.cancel(promisse);
                                 $location.path('/instances').search({
                                     status: 'ok',
-                                    message: 'Instance ' +server.name+ ' deleted!'
+                                    message: 'Instance ' + server.name + ' deleted!'
                                 });
                             });
                         }, 5000);
@@ -51,6 +51,24 @@ angular.module('charon').controller('InstancesController',
                 });
 
         }
+
+        $scope.changeState = function(server) {
+            var uriState;
+            if (server.status == "STOPPED") {
+                uriState = '/api/openstack/server/start/';
+            } else {
+                uriState = '/api/openstack/server/stop/';
+            }
+
+            $http({
+                method: 'GET',
+                url: $scope.charonLocate + uriState + server.id
+            }).then(function(data) {
+                $route.reload();
+            }, function(err) {
+                console.log(err);
+            });
+        };
 
 
         $scope.typeMessage = function() {
