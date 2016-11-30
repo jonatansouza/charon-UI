@@ -10,6 +10,7 @@ angular.module('charon').controller('InstancesController',
 
         $timeout(function() {
             $scope.hideMessage = false;
+            $location.search($location.path());
         }, 10000);
 
         $http({
@@ -28,7 +29,7 @@ angular.module('charon').controller('InstancesController',
                         method: 'DELETE',
                         url: $scope.charonLocate + '/api/openstack/servers/' + server.id
                     }).then(function(data) {
-                        $scope.waiting = true;
+                        $scope.stateServer = server.id;
                         var promisse = $interval(function() {
                             $http({
                                 method: 'GET',
