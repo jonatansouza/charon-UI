@@ -1,3 +1,10 @@
+<style>
+    .thumbnail {
+        height: 25%;
+        overflow: auto;
+    }
+</style>
+
 <div ng-if="hideMessage">
     <div ng-class="typeMessage()" role="alert">
         <strong>{{alertMessage}}</strong>
@@ -40,29 +47,47 @@
                                 Public:
                                 {{server.addresses.private[1].addr}}
                               </span>
+                            <span ng-if="server.addresses.private.length == 1">
+                              Public:
+                              TBD
+                            </span>
                         </p>
                     </div>
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <!--BUTTON ON/OFF -->
+                    <div class="pull-right">
+                        <div ng-if="stateServer != server.id">
+                            <button type="button" ng-click="changeState(server)" class="btn btn-default">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                      </button>
+                        </div>
+                        <div ng-if="stateServer == server.id">
+                            <button type="button" class="btn btn-default" disabled>
+                        <i class="fa fa-spinner fa-spin"></i>
+                      </button>
+                        </div>
+                    </div>
+                    <!-- END BUTTON ON/OFF -->
+                    <div class="pull-left">
+
+                        <div class="dropup">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             Options
-                            <span class="caret"></span>
+                          <span class="caret"></span>
                         </button>
-                        <button type="button" class="btn btn-default pull-right" ng-click="changeState(server)">
-                          <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li><a class="pointer " ng-click="destroyInstance(server, $index)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
-                            <li>
-                                <a href="#/editInstance?id={{server.id}}">
-                                    <i class="fa fa-pencil" aria-hidden="true"></i> Edit
-                                </a>
-                            </li>
-                        </ul>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li><a class="pointer " ng-click="destroyInstance(server, $index)"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></li>
+                                <li>
+                                    <a href="#/editInstance?id={{server.id}}">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i> Edit
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
 
                 </div>
             </div>
-
         </div>
     </div>
 </div>

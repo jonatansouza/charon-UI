@@ -72,10 +72,15 @@
         </table>
 
     </div>
-    <div class="row text-center">
-
+    <div class="text-center">
         <button class="btn btn-default" ng-click="generateImage()" data-toggle="tooltip" data-placement="top" title="Generate image"><i class="fa fa-clone" aria-hidden="true"></i>
     </button>
-        <button class="btn btn-default" ng-click="remoteAccess(server)" data-toggle="tooltip" data-placement="right" title="remote access"><i class="fa fa-terminal" aria-hidden="true"></i></button>
+        <button class="btn btn-default" ng-click="remoteAccess(server)" data-toggle="tooltip" data-placement="right" title="remote access"  disabled><i class="fa fa-terminal" aria-hidden="true"></i></button>
+        <span ng-if="buttonAnimation">
+            <button class="btn btn-default" ng-click="changeState()" data-toggle="tooltip" data-placement="top" title="Change State">  <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+            </button>
+        </span>
+        <span ng-if="!buttonAnimation">
+            <button class="btn btn-default" disabled>  <i class="fa fa-spinner fa-spin" aria-hidden="true"></i></button>
+        </span>
     </div>
-</div>

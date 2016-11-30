@@ -1,11 +1,12 @@
 angular.module('charon').controller('InstancesController',
 
-    function(init, $scope, $routeParams, $http, $location, $timeout, $interval, $ngBootbox) {
+    function(init, $scope, $routeParams, $http, $location, $timeout, $interval, $ngBootbox, $route) {
 
         $scope.charonLocate = init.protocol + init.url + ':' + init.port;
         $scope.alertMessage = $routeParams.message || '';
         $scope.hideMessage = true;
         $scope.waiting = false;
+        $scope.stateServer = 'foo';
 
         $timeout(function() {
             $scope.hideMessage = false;
@@ -64,7 +65,24 @@ angular.module('charon').controller('InstancesController',
                 method: 'GET',
                 url: $scope.charonLocate + uriState + server.id
             }).then(function(data) {
-                $route.reload();
+                $scope.stateServer = server.id;
+                var promisse = $interval(function() {
+                    $http({
+                        method: 'GET',
+                        url: $scope.charonLocate + '/api/openstack/servers/' + server.id
+                    }).then(function(data) {
+                        if (data.status == server.status) {
+                            console.log('still the same');
+                        } else {
+                            $interval.cancel(promisse);
+                            $scope.stateServer = 'foo';
+                            $location.url($location.path());
+                            $route.reload();
+                        }
+                    }, function(err) {
+                        console.log(err);
+                    });
+                }, 5000);
             }, function(err) {
                 console.log(err);
             });
