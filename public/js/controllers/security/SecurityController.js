@@ -4,9 +4,12 @@ angular.module('charon').controller('SecurityController',
         $scope.hideMessage = true;
         $scope.alertMessage = $routeParams.message || '';
 
-        $timeout(function() {
-            $scope.hideMessage = false;
-        }, 10000);
+        if (Boolean(Object.keys($routeParams).length)) {
+            $timeout(function() {
+                $scope.hideMessage = false;
+                $location.search({});
+            }, 10000);
+        }
 
         $http({
             method: 'GET',
@@ -72,8 +75,8 @@ angular.module('charon').controller('SecurityController',
                             });
                             $timeout(function() {
                                 $location.path('/security').search({
-                                  status:'ok',
-                                  message: 'Group '+key+ ' deleted!'
+                                    status: 'ok',
+                                    message: 'Group ' + key + ' deleted!'
                                 });
                             }, 2000);
                         }
@@ -109,8 +112,8 @@ angular.module('charon').controller('SecurityController',
                             });
                             $timeout(function() {
                                 $location.path('/security').search({
-                                  status:'ok',
-                                  message: 'Group '+group.name+ ' deleted!'
+                                    status: 'ok',
+                                    message: 'Group ' + group.name + ' deleted!'
                                 });
                             }, 2000);
                         }

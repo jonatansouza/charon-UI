@@ -8,11 +8,11 @@ angular.module('charon').controller('InstancesController',
         $scope.waiting = false;
         $scope.stateServer = 'foo';
 
-        $timeout(function() {
-            $scope.hideMessage = false;
-            $location.search($location.path());
-        }, 10000);
-
+        if (Boolean(Object.keys($routeParams).length)) {
+            $timeout(function() {
+                $scope.hideMessage = false;
+            }, 10000);
+        }
         $http({
             method: 'GET',
             url: $scope.charonLocate + '/api/openstack/servers'

@@ -53,7 +53,7 @@
                     <td>Public Address</td>
                     <td>
                         <span ng-if="server.addresses.private.length > 1">
-                        {{server.addresses.private[1].addr}}
+                        {{server.addresses.private[1].addr}} <button ng-click="deallocateIp(server.id, server.addresses.private[1].addr)" class="btn btn-warning"> Deallocate IP </button>
                     </span>
                         <span ng-if="server.addresses.private.length < 2">
                         <button ng-click="allocateIp(server.id)" class="btn btn-warning"> Allocate IP </button>

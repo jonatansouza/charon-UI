@@ -150,6 +150,34 @@ angular.module('charon').controller('EditController',
             });
         };
 
+        $scope.deallocateIp = function(myServer, floatingIp) {
+
+            $http({
+                method: 'POST',
+                url: $scope.charonLocate + '/api/openstack/remove/ip',
+                data: {
+                    server: myServer,
+                    floatingIp: floatingIp
+                }
+            }).then(function(data) {
+                $ngBootbox.alert('ip removed from instance!').then(function() {
+                    $route.reload();
+                });
+            }, function(err) {
+                $ngBootbox.customDialog({
+                    message: '<span class="text-danger text-center">No ips available!</span>',
+                    title: '<b>Erro</b>',
+                    buttons: {
+                        ok: {
+                            label: "close",
+                            className: "btn-danger",
+                            callback: function() {}
+                        }
+                    }
+                });
+            });
+        };
+
         $scope.remoteAccess = function(server) {
             console.log(server);
         }

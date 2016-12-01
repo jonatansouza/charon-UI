@@ -5,9 +5,12 @@ angular.module('charon').controller('VolumesController',
         $scope.hideMessage = true;
         $scope.volumeToAttach = "";
 
-        $timeout(function() {
-            $scope.hideMessage = false;
-        }, 10000);
+        if (Boolean(Object.keys($routeParams).length)) {
+            $timeout(function() {
+                $scope.hideMessage = false;
+                $location.search({});
+            }, 10000);
+        }
 
 
         $http({
@@ -99,7 +102,7 @@ angular.module('charon').controller('VolumesController',
                         data: data,
                         url: $scope.charonLocate + '/api/openstack/detach'
                     }).then(
-                        function(data){
+                        function(data) {
                             console.log('detach');
                             $scope.waiting = true;
                             $scope.waitingMessage = defaultMessages.detachVolume

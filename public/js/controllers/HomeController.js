@@ -1,10 +1,10 @@
 angular.module('charon').
 controller('HomeController',
-    function(init, $scope, $routeParams, $http, $location, $interval) {
+    function(init, $scope, $routeParams, $http, $location, $interval, $websocket) {
 
         $scope.charonAPI = false;
         $scope.project = "Charon";
-        $scope.charonLocate = init.protocol+init.url+':'+init.port;
+        $scope.charonLocate = init.protocol + init.url + ':' + init.port;
 
         connectingCharon();
         if (!$scope.charonAPI) {
@@ -22,7 +22,7 @@ controller('HomeController',
         function connectingCharon() {
             $http({
                 method: 'GET',
-                url: $scope.charonLocate+'/api/openstack/version'
+                url: $scope.charonLocate + '/api/openstack/version'
             }).then(function(data) {
                 $scope.charonAPI = true;
                 $scope.version = data.data;
@@ -32,7 +32,7 @@ controller('HomeController',
 
             $http({
                 method: 'GET',
-                url: $scope.charonLocate+'/api/openstack/limits'
+                url: $scope.charonLocate + '/api/openstack/limits'
             }).then(function(data) {
                 $scope.charonAPI = true;
                 $scope.limits = data.data;

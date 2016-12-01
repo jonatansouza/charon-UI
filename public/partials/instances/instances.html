@@ -5,7 +5,7 @@
     }
 </style>
 
-<div ng-if="hideMessage">
+<div ng-if="hideMessage" class="col-md-12" style="position: absolute">
     <div ng-class="typeMessage()" role="alert">
         <strong>{{alertMessage}}</strong>
     </div>
@@ -29,7 +29,7 @@
     <h3 class="text-info text-center" ng-if="servers.length <= 0">No Instances to list!</h3>
     <div class="col-lg-12">
         <div ng-repeat="server in servers track by $index">
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6 col-md-3">
                 <div class="thumbnail">
                     <div class="text-center">
                         <i class="fa fa-desktop fa-4x" aria-hidden="true"></i>
@@ -52,19 +52,6 @@
                               TBD
                             </span>
                         </p>
-                    </div>
-                    <!--BUTTON ON/OFF -->
-                    <div class="pull-right">
-                        <div ng-if="stateServer != server.id">
-                            <button type="button" ng-click="changeState(server)" class="btn btn-default">
-                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                      </button>
-                        </div>
-                        <div ng-if="stateServer == server.id">
-                            <button type="button" class="btn btn-default" disabled>
-                        <i class="fa fa-spinner fa-spin"></i>
-                      </button>
-                        </div>
                     </div>
                     <!-- END BUTTON ON/OFF -->
                     <div class="pull-left">
