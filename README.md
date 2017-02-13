@@ -1,31 +1,30 @@
-# README #
+# charon-ui
 
-Charon-UI
+> A Vue.js project
 
-## Overview
+## Build Setup
 
-Interface to provide a environment to Charon-API
+``` bash
+# install dependencies
+npm install
 
-## Requirements
+# serve with hot reload at localhost:8080
+npm run dev
 
-MongoDB
+# build for production with minification
+npm run build
 
-Nodejs
+# build for production and view the bundle analyzer report
+npm run build --report
 
-## Install and Setup
+# run unit tests
+npm run unit
 
-`$ npm install`
+# run e2e tests
+npm run e2e
 
-config file `public/js/config/init.js` with Charon-API address
-
-```json
-
-{
-    "protocol": "http://",
-    "url" : "192.168.1.2",
-    "port" : "3000"
-}
-
+# run all tests
+npm test
 ```
 
-`$ npm start`
+For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
