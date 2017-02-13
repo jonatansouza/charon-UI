@@ -29,7 +29,6 @@ export default {
   },
   methods: {
     loadImg: (path) => {
-      console.log(path);
       return require('../assets/' + path + '.svg');
 
     }

@@ -1,6 +1,6 @@
 <template>
 <div class="container-fluid">
-  <h1 class="page-header">Servers</h1>
+  <h1 class="page-header">Servers <span class="adjust-btn"><a href="#/create-server" class="btn btn-primary btn-lg btn-rounded"><i class="fa fa-plus"></i></a></span></h1>
   <div v-if="!waiting" v-for="(server,index) in servers" :class="(index + 1) % 3 ? '' : 'row'">
     <card :card="server" imageUrl="server" category="servers" class="col-md-4 "></card>
   </div>
@@ -44,5 +44,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.adjust-btn{
+  position: absolute;
+  right: 1%;
+}
 </style>
