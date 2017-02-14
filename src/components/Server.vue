@@ -24,7 +24,7 @@
       <li><strong>Created: </strong>{{formatDate(image.created)}}</li>
     </ul>
     <a href="#" class="btn btn-warning btn-lg" data-toggle="tooltip" data-placement="left" title="Power-on or Power-of Server"><i class="fa fa-power-off"></i></a>
-    <a href="#" class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom" title="Create a template of Server"><i class="fa fa-clone"></i></a>
+    <a class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom" title="Create a template of Server"><i class="fa fa-clone"></i></a>
     <a @click="showModal = true" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="right" title="Delete your Server"><i class="fa fa-trash"></i></a>
     <modal v-if="showModal" :component="server" @close="showModal = false"></modal>
   </div>
@@ -42,11 +42,15 @@ export default {
       showModal: false
     }
   },
-  components:{
+  components: {
     Modal
   },
   created() {
-    this.fetchServer()
+    var self = this;
+    self.fetchServer();
+    self.$on('delete', function() {
+      self.deleteServer();
+    });
   },
   methods: {
     fetchServer() {
@@ -72,6 +76,16 @@ export default {
       if (value) {
         return moment(String(value)).format('MM/DD/YYYY hh:mm')
       }
+    },
+    deleteServer () {
+    var self = this;
+      self.axios.delete('/servers/' + self.server.id)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error)
+        });
     }
   }
 }

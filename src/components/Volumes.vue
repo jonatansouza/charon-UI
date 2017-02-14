@@ -1,8 +1,8 @@
 <template>
 <div class="container-fluid">
   <h1 class="page-header">Volumes</h1>
-  <div v-if="!waiting" v-for="(volume,index) in volumes" :class="(index + 1) % 3 ? '' : 'row'">
-    <card :card="volume" imageUrl="volume" category="volumes" class="col-md-4"></card>
+  <div v-if="!waiting" v-for="(volume,index) in volumes" :class="(index + 1) % 4 ? '' : 'row'">
+    <card :card="volume" imageUrl="volume" category="volumes" class="col-md-3"></card>
   </div>
   <wait v-if="waiting" msg="Fetching Volume List From Cloud"></wait>
 </div>

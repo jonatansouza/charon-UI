@@ -14,7 +14,7 @@
             <button class="btn btn-default" @click="$emit('close')">
             cancel
           </button>
-            <button class="btn btn-danger" @click="$emit('close')">
+            <button class="btn btn-danger" @click="deleteComponent">
           delete
         </button>
           </p>
@@ -28,7 +28,19 @@
 
 <script>
 export default {
-  props: ['component']
+  props: {
+      component: {
+        type: Object,
+        require: true
+      }
+  },
+  methods: {
+    deleteComponent () {
+      var self = this;
+      self.$parent.$emit('delete');
+      self.$emit('close');
+    }
+  }
 }
 </script>
 
@@ -73,7 +85,6 @@ export default {
 .modal-default-button {
   float: right;
 }
-
 
 /*
  * The following styles are auto-applied to elements with
