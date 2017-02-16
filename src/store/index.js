@@ -5,12 +5,15 @@ import volumes from './modules/volumes'
 import images from './modules/images'
 import networks from './modules/networks'
 import flavors from './modules/flavors'
-
+import actionStatus from './modules/actionStatus'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  state: {
+
+  },
   modules: {
-    servers, volumes, images, networks, flavors
+    servers, volumes, images, networks, flavors, actionStatus
   }
 })

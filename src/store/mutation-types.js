@@ -1,6 +1,10 @@
+export const ACTION_SUCCESS = 'ACTION_SUCCESS'
+export const ACTION_FAILURE = 'ACTION_FAILURE'
+export const ACTION_WAIT = 'ACTION_WAIT'
+export const ACTION_RESET = 'ACTION_RESET'
+
 export const SET_SERVERS = 'SET_SERVERS'
 export const SET_SERVER = 'SET_SERVER'
-export const SET_ADDRS = 'SET_ADDRS'
 export const DEL_SERVER = 'DEL_SERVER'
 
 export const SET_VOLUMES = 'SET_VOLUMES'

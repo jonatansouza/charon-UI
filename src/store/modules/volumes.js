@@ -18,7 +18,11 @@ const actions = {
     Vue.axios.get('/volumes')
       .then((response) => {
         commit(types.SET_VOLUMES, response.data)
-      }).catch((err) => console.log(err))
+        commit(types.ACTION_SUCCESS)
+      }).catch((err) => {
+        console.log(err);
+        commit(types.ACTION_FAILURE);
+      });
   },
   getVolumeById({commit}, id) {
     Vue.axios.get('/volumes/'+id)
