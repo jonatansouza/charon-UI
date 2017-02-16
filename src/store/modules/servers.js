@@ -25,9 +25,15 @@ const actions = {
   getServerById({
     commit
   }, id) {
+
     Vue.axios.get('/servers/' + id)
       .then((response) => {
-        commit(types.SET_SERVER, response.data)
+        var server = response.data
+        Vue.axios.get('/images/' + server.imageId)
+          .then((response) => {
+            server.image = response.data
+            commit(types.SET_SERVER, server)
+          }).catch((err) => console.log(err))
       }).catch((err) => console.log(err))
   },
   updateStateServer({
@@ -41,11 +47,14 @@ const actions = {
   deleteServer({
     commit
   }, id) {
+    commit(types.ACTION_WAIT)
     Vue.axios.delete('/servers/' + id)
       .then((response) => {
         commit(types.DEL_SERVER, response.data)
         commit(types.ACTION_SUCCESS)
-      }).catch((err) => console.log(err))
+      }).catch((err) => {
+        commit(types.ACTION_FAILURE)
+      })
   },
   createServer({
     commit
@@ -55,7 +64,7 @@ const actions = {
       .then((response) => {
         commit(types.SET_SERVERS, response.data)
         commit(types.ACTION_SUCCESS, response.data)
-      }).catch((err) =>{
+      }).catch((err) => {
         commit(types.ACTION_FAILURE, err)
       })
   }
