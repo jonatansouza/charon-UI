@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="text-center">
            <h3>{{msg}}<br><small>Please wait<br></small></h3>
-           <i class="fa fa-spinner fa-spin fa-5x"></i>
+           <i class="fa  fa-circle-o-notch fa-spin fa-5x"></i>
        </div>
 </template>
 

@@ -1,33 +1,53 @@
+<style scoped>
+
+.custom-close {
+    text-decoration: none;
+    color: inherit;
+}
+
+</style>
+
 <template lang="html">
-  <div :class="classAlert" class="alert text-center" role="alert"><span class="pull-left"><i class="fa fa-exclamation-triangle fa-2x" aria-hidden="true"></i></span>
-<strong>{{msg}}</strong><a class="pull-right custom-close" href="#">X</a></div>
+
+<div id="alert-message">
+    <div :class="'alert alert-dismissible alert-'+message.type" role="alert" transition="fade">
+        <!-- {{message.handleShowEvent()}} -->
+        <button type="button" class="close" v-show="message.important" @click="message.remove()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <strong>{{message.type}}</strong> {{message.text}}
+    </div>
+
+
+</div>
+
 </template>
 
 <script>
+
 export default {
-  props: {
-    msg: {
-      type: String,
-      require: true
-    },
-    category: {
-      type: String,
-      require: true
-    }
-  },
-  computed: {
-    classAlert() {
-      var self = this;
-      return 'alert-' + self.category
-    }
-  }
-
+    data() {
+            return {
+                message: {}
+            }
+        },
+        created() {
+            var self = this;
+            self.$on('alert-message', function(message) {
+                console.log('alert-message');
+                var self = this;
+                self.createAlertMessage(message)
+            })
+        },
+        methods: {
+            createAlertMessage(message) {
+                var self = this;
+                self.message = {
+                    text: (typeof message.text == 'undefined') ? 'EMPTY MESSAGE' : message.text,
+                    type: (typeof message.type == 'undefined') ? 'info' : message.type
+                }
+            }
+        }
 }
+
 </script>
-
-<style scoped>
-.custom-close {
-  text-decoration: none;
-  color: inherit;
-}
-</style>

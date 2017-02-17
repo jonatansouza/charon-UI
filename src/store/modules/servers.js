@@ -39,9 +39,10 @@ const actions = {
   updateStateServer({
     commit
   }, server) {
-    Vue.axios.get('/servers/' + id)
+    console.log(server);
+    Vue.axios.post('/server/', server)
       .then((response) => {
-        commit(types.SET_SERVER, response.data)
+        console.log(response);
       }).catch((err) => console.log(err))
   },
   deleteServer({
@@ -67,6 +68,15 @@ const actions = {
       }).catch((err) => {
         commit(types.ACTION_FAILURE, err)
       })
+  },
+  addFloatingIp({
+    commit
+  }, server) {
+    console.log(server);
+    Vue.axios.post('/server/ip', server)
+      .then((response) => {
+        console.log(response);
+      }).catch((err) => console.log(err))
   }
 }
 

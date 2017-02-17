@@ -1,3 +1,7 @@
+//OPENSTACK
+export const OPENSTACK_RUNNING = 'RUNNING'
+export const OPENSTACK_STOP = 'STOPPED'
+
 export const SUCCESS = 'successful'
 export const FAILURE = 'failure'
 export const WAIT = 'wait'
