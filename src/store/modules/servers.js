@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import * as types from '../mutation-types'
+import * as info from '../default-messages'
 
 // initial state
 const state = {
@@ -25,7 +26,6 @@ const actions = {
   getServerById({
     commit
   }, id) {
-
     Vue.axios.get('/servers/' + id)
       .then((response) => {
         var server = response.data
@@ -36,39 +36,6 @@ const actions = {
           }).catch((err) => console.log(err))
       }).catch((err) => console.log(err))
   },
-  updateStateServer({
-    commit
-  }, server) {
-    console.log(server);
-    Vue.axios.post('/server/', server)
-      .then((response) => {
-        console.log(response);
-      }).catch((err) => console.log(err))
-  },
-  deleteServer({
-    commit
-  }, id) {
-    commit(types.ACTION_WAIT)
-    Vue.axios.delete('/servers/' + id)
-      .then((response) => {
-        commit(types.DEL_SERVER, response.data)
-        commit(types.ACTION_SUCCESS)
-      }).catch((err) => {
-        commit(types.ACTION_FAILURE)
-      })
-  },
-  createServer({
-    commit
-  }, data) {
-    commit(types.ACTION_WAIT)
-    Vue.axios.post('/servers', data)
-      .then((response) => {
-        commit(types.SET_SERVERS, response.data)
-        commit(types.ACTION_SUCCESS, response.data)
-      }).catch((err) => {
-        commit(types.ACTION_FAILURE, err)
-      })
-  },
   addFloatingIp({
     commit
   }, server) {
@@ -77,6 +44,11 @@ const actions = {
       .then((response) => {
         console.log(response);
       }).catch((err) => console.log(err))
+  },
+  resetRequests({
+    commit
+  }) {
+    commit(types.REQUEST_SERVER_RESET)
   }
 }
 
@@ -87,9 +59,6 @@ const mutations = {
   },
   [types.SET_SERVER](state, server) {
     state.server = server
-  },
-  [types.DEL_SERVER](state, id) {
-    state.server = {}
   }
 }
 

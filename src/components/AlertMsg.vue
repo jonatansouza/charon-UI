@@ -9,13 +9,13 @@
 
 <template lang="html">
 
-<div id="alert-message">
+<div id="alert-message" class="text-center" v-if="message">
     <div :class="'alert alert-dismissible alert-'+message.type" role="alert" transition="fade">
         <!-- {{message.handleShowEvent()}} -->
         <button type="button" class="close" v-show="message.important" @click="message.remove()">
             <span aria-hidden="true">&times;</span>
         </button>
-        <strong>{{message.type}}</strong> {{message.text}}
+        <strong>{{message.type}} </strong> {{message.text}}
     </div>
 
 

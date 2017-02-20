@@ -5,6 +5,7 @@
         display: none;
     }
 }
+
 @media (max-width: 1024px) {
     .desktop {
         display: none;
@@ -16,16 +17,17 @@
 <template lang="html">
 
 <div>
-  <a href="#/servers" class="btn btn-default btn-lg"><i class="fa fa-arrow-left"></i> Back</a>
-    <wait v-if="!server.id && !actionStatus.status" :msg="info.FETCH_SERVER_MSG"></wait>
-    <div v-if="server.id">
-        <div class="container text-center">
+    <a href="#/servers" class="btn btn-default btn-lg"><i class="fa fa-arrow-left"></i> Back</a>
+    <default-page v-if="!alive"></default-page>
+    <div v-if="alive">
+        <wait v-if="request == info.WAIT " :msg="msg"></wait>
+        <div class="container text-center" v-if="request != info.WAIT">
             <h1 class="page-header">{{server.name}} <small>Server</small></h1>
             <img :src="loadImg()" class="img-thumbnail-o" alt="avatar">
             <ul class="list-unstyled">
+                <li><strong>Status: </strong>{{server.status}}</li>
                 <li><strong>ID: </strong>{{server.id}}</li>
                 <li><strong>Name: </strong>{{server.name}}</li>
-                <li><strong>Status: </strong>{{server.status}}</li>
                 <li><strong>Created: </strong>{{formatDate(server.created)}}</li>
                 <li><strong>Last Update: </strong>{{formatDate(server.updated)}}</li>
                 <li><strong>Image ID: </strong>{{server.image.id}}</li>
@@ -43,10 +45,7 @@
             </div>
             <h1 class="page-header">Tools</h1>
             <div class="mobile">
-                <a class="btn btn-default btn-lg btn-block" data-toggle="tooltip" data-placement="left" title="Power-on or Power-of Server"><i class="fa fa-power-off"></i> Power-on/off</a>
-                <a class="btn btn-default btn-lg btn-block" data-toggle="tooltip" data-placement="bottom" title="Create a template of Server"><i class="fa fa-clone"></i> Create Template</a>
-                <a class="btn btn-default btn-lg btn-block" data-toggle="tooltip" data-placement="left" title="Associate Floating IP"><i class="fa fa-desktop"></i> Add Floating IP</a>
-                <a @click="showModal = true" class="btn btn-danger btn-lg btn-block" data-toggle="tooltip" data-placement="right" title="Delete your Server"><i class="fa fa-trash"></i> Delete</a>
+                <!-- CUSTOM BUTTONS MOBILE -->
             </div>
             <div class="desktop">
                 <a @click="changeState" class="btn btn-default btn-lg " :class="statusServer()" data-toggle="tooltip" data-placement="left" title="Power-on or Power-of Server"><i class="fa fa-power-off"></i></a>
@@ -57,66 +56,134 @@
             <modal v-if="showModal" :component="server" @close="showModal = false"></modal>
         </div>
     </div>
+
 </div>
+
 </template>
+
 <script>
 
 import moment from 'moment'
 import Modal from 'components/ModalDanger'
 import Wait from 'components/Wait'
 import AlertMsg from 'components/AlertMsg'
+import DefaultPage from 'components/DefaultPage'
 import * as info from '../store/default-messages'
-import {
-    mapGetters,
-    mapAction
-}
-from 'vuex'
 
 export default {
+    name: 'server',
     data() {
-            return {
-                showModal: false,
-                msg: "",
-                info: {}
-            }
-        },
-        components: {
-            Modal,
-            Wait,
-            AlertMsg
-        },
-        computed: mapGetters({
-            server: 'byIdServer',
-            image: 'byIdImage',
-            actionStatus: 'actionStatus'
-        }),
-        created() {
-            var self = this;
-            self.info = info;
-            self.$store.dispatch('actionReset')
-            self.msg = info.FETCH_SERVER_MSG
-            self.$store.dispatch('getServerById', self.$route.params.id)
-            self.$on('delete', function() {
-                alertMessage('Server')
-                self.$store.dispatch('deleteServer', self.server.id)
-            });
+        return {
+            showModal: false,
+            msg: info.FETCH_SERVER_MSG,
+            info: {},
+            request: info.WAIT,
+            alive: true,
+            server: {}
+        }
+    },
+    components: {
+        Modal,
+        Wait,
+        AlertMsg,
+        DefaultPage
+    },
+    created() {
+        var self = this;
+        self.info = info;
+        self.fetchServer();
+        self.$on('delete', function() {
+            self.deleteServer();
+        });
 
-        },
-        methods: {
+    },
+    methods: {
+        fetchServer() {
+                var self = this;
+                self.axios.get('/servers/' + self.$route.params.id)
+                    .then((response) => {
+                        var server = response.data
+                        self.axios.get('/images/' + server.imageId)
+                            .then((response) => {
+                                server.image = response.data
+                                self.server = server;
+                                self.request = "";
+                            }).catch((err) => console.log(err))
+                    }).catch((err) => {
+                        if (err.response.data.statusCode == 404) {
+                            self.alive = false;
+                        }
+                    });
+            },
             statusServer() {
-              var self = this;
-              return self.server.status == self.info.OPENSTACK_STOP ? 'btn-default': 'btn-warning'
+                var self = this;
+                if (self.request == info.WAIT) {
+                    return 'btn-default disabled'
+                } else {
+                    return (self.server.status == self.info.OPENSTACK_STOP) ? 'btn-default' : 'btn-warning'
+                }
             },
             loadImg: () => {
                 return require('../assets/server.svg');
             },
-            associateFloatingIp(){
-              var self = this;
-              self.$store.dispatch('addFloatingIp', self.server);
+            associateFloatingIp() {
+                var self = this;
+                self.$store.dispatch('addFloatingIp', self.server);
             },
-            changeState () {
-              var self = this;
-              self.$store.dispatch('updateStateServer', self.server);
+            deleteServer() {
+                var self = this;
+                self.request = info.WAIT;
+                self.msg = info.DELETE_SERVER_MSG;
+                var server = self.server;
+                self.axios.delete('/servers/' + server.id)
+                    .then((response) => {
+                        var interval = setInterval(() => {
+                                self.axios.get('/servers/' + server.id)
+                                    .then((response) => {
+                                        server = response.data
+                                        console.log('attemp delete '+ server.id);
+                                    }).catch((err) => {
+                                        if (err.response.data.statusCode == 404) {
+                                            self.request = info.SUCCESS;
+                                            self.alive = false;
+                                            self.request = info.SUCCESS;
+                                            self.alertMessage('Server Deleted!', 'info')
+                                            clearInterval(interval);
+                                        }
+                                    });
+                            },
+                            2000);
+                    }).catch((err) => {
+
+                    })
+            },
+            changeState() {
+                var self = this;
+                var server = self.server;
+                var currentState = server.status;
+                self.request = info.WAIT;
+                self.msg = info.UPDATE_SERVER_MSG;
+                self.axios.post('/server', server)
+                    .then((response) => {
+                        var interval = setInterval(() => {
+                            self.axios.get('/servers/' + server.id)
+                                .then((response) => {
+                                    server = response.data
+                                    if (server.status != currentState) {
+                                        self.axios.get('/images/' + server.imageId)
+                                            .then((response) => {
+                                                server.image = response.data
+                                                self.server = server;
+                                                self.request = info.SUCCESS;
+                                                clearInterval(interval);
+                                            }).catch((err) => {
+                                                console.log(err);
+                                            });
+
+                                    }
+                                }).catch((err) => console.log(err))
+                        }, 2000);
+                    }).catch((err) => console.log(err))
             },
             formatDate: (value) => {
                 if (value) {
@@ -124,13 +191,14 @@ export default {
                 }
             },
             alertMessage(msg, type) {
-              var message = {
-                text: msg,
-                type: type
-              }
-              self.$parent.$refs['alert-message'].$emit('alert-message', message);
+                var self = this;
+                var message = {
+                    text: msg,
+                    type: type
+                }
+                self.$parent.$refs['alert-message'].$emit('alert-message', message);
             }
-        }
+    }
 }
 
 </script>

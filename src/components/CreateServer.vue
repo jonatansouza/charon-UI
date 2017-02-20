@@ -8,12 +8,9 @@
 
 <div class="container">
     <div class="row">
-      <h3 class="text-center">Create Server</h3>
-        <alert-msg v-if="nameInvalid" msg="invalid name!" category="danger"></alert-msg>
-        <alert-msg v-if="actionStatus.status == info.FAILURE" :msg="actionStatus.msg" category="danger"></alert-msg>
-        <alert-msg v-if="actionStatus.status == info.SUCCESS" :msg="'Server '+ actionStatus.msg.name +' created'" category="success"></alert-msg>
-        <wait :msg="'Creating Server'+nameInstance" v-if="actionStatus.status == info.WAIT"></wait>
-        <div v-if="actionStatus.status != info.WAIT">
+        <h3 class="text-center">Create Server</h3>
+        <wait :msg=msg v-if="request == info.WAIT"></wait>
+        <div v-if="request != info.WAIT">
             <div class="form-group">
                 <label for="instance">Name</label>
                 <input type="text" class="form-control" id="instance" v-model="nameInstance" @keyup="updateName" placeholder="Server Name" required>
@@ -45,7 +42,8 @@ import AlertMsg from 'components/AlertMsg'
 import Wait from 'components/Wait'
 import * as info from '../store/default-messages'
 import {
-    mapGetters, mapAction
+    mapGetters,
+    mapAction
 }
 from 'vuex'
 export default {
@@ -55,21 +53,22 @@ export default {
                 flavorSelected: {},
                 nameInstance: "",
                 nameInvalid: false,
-                info: info
+                info: info,
+                request: ""
             }
         },
         components: {
-            AlertMsg, Wait
+            Wait
         },
         computed: mapGetters({
             images: 'allImages',
-            flavors: 'allFlavors',
-            actionStatus: 'actionStatus'
+            flavors: 'allFlavors'
         }),
         created() {
-            this.$store.dispatch('actionReset')
-            this.$store.dispatch('getAllImages');
-            this.$store.dispatch('getAllFlavors');
+            var self = this;
+            self.info = info;
+            self.$store.dispatch('getAllFlavors');
+            self.$store.dispatch('getAllImages');
         },
         methods: {
             updateName() {
@@ -81,12 +80,40 @@ export default {
                     if (self.nameInstance == "" || self.nameInstance.indexOf(' ') >= 0) {
                         self.nameInvalid = true;
                     } else {
+                        self.request = info.WAIT
+                        self.msg = info.CREATE_SERVER_MSG + self.nameInstance
                         var data = {
                             'name': self.nameInstance,
                             'image': self.imageSelected.id,
                             'flavor': self.flavorSelected.id
                         }
-                        self.$store.dispatch('createServer', data);
+                        self.axios.post('/servers', data)
+                            .then((response) => {
+                                self.axios.get('/servers/' + response.data.id)
+                                    .then((response) => {
+                                        var server = response.data;
+                                        var currentState = server.status
+                                        var interval = setInterval(() => {
+                                                self.axios.get('/servers/' + server.id)
+                                                    .then((response) => {
+                                                        server = response.data
+                                                        if (server.status != currentState) {
+                                                            self.request = info.SUCCESS;
+                                                            clearInterval(interval);
+                                                        }else{
+                                                          console.log('attemp ' + server);
+                                                        }
+                                                    }).catch((err) => {
+                                                        console.log(err);
+                                                    });
+                                            },
+                                            2000);
+                                    }).catch((err) => {
+                                        console.log(err);
+                                    });
+                            }).catch((err) => {
+                                console.log(err);
+                            })
                     }
                 }
         }

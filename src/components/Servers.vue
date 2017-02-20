@@ -16,8 +16,8 @@
             <card :card="server" imageUrl="server" category="servers" class="col-md-3 "></card>
         </div>
     </div>
-    <div v-if="!servers.length">
-        <wait msg="Fetching Servers list from API"></wait>
+    <div v-if="request == info.WAIT">
+      <wait :msg="msg"></wait>
     </div>
 </div>
 
@@ -27,20 +27,36 @@
 
 import Card from 'components/Card'
 import Wait from 'components/Wait'
-import {
-    mapGetters, mapAction
-}
-from 'vuex'
+import * as info from '../store/default-messages'
 
 export default {
+    data () {
+      return {
+        servers: [],
+        request: "",
+        msg: "",
+        info: {}
+      }
+    },
     components: {
         Card, Wait
     },
-    computed: mapGetters({
-        servers: 'allServers'
-    }),
     created() {
-        this.$store.dispatch('getAllServers')
+        var self = this;
+        self.info = info;
+        self.msg = info.FETCH_SERVERS_MSG;
+        self.request = info.WAIT;
+        this.fetchServerList();
+    },
+    methods: {
+      fetchServerList() {
+        var self = this;
+        self.axios.get('/servers')
+          .then((response) => {
+            self.request = info.SUCCESS;
+            self.servers = response.data;
+          }).catch((err) => console.log(err))
+      }
     }
 }
 
