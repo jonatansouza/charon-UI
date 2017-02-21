@@ -8,12 +8,12 @@
 
 <div class="container">
     <div class="row">
+      <wait :msg=msg v-if="request == info.WAIT"></wait>
+      <div v-if="request != info.WAIT">
         <h3 class="text-center">Create Server</h3>
-        <wait :msg=msg v-if="request == info.WAIT"></wait>
-        <div v-if="request != info.WAIT">
             <div class="form-group">
                 <label for="instance">Name</label>
-                <input type="text" class="form-control" id="instance" v-model="nameInstance" @keyup="updateName" placeholder="Server Name" required>
+                <input type="text" class="form-control" id="instance" v-model="nameInstance" placeholder="Server Name" required>
             </div>
             <div class="form-group">
                 <label for="image">Image</label>
@@ -71,51 +71,54 @@ export default {
             self.$store.dispatch('getAllImages');
         },
         methods: {
-            updateName() {
-                    var self = this;
-                    self.nameInvalid = false;
-                },
-                createServer() {
-                    var self = this;
-                    if (self.nameInstance == "" || self.nameInstance.indexOf(' ') >= 0) {
-                        self.nameInvalid = true;
-                    } else {
-                        self.request = info.WAIT
-                        self.msg = info.CREATE_SERVER_MSG + self.nameInstance
-                        var data = {
-                            'name': self.nameInstance,
-                            'image': self.imageSelected.id,
-                            'flavor': self.flavorSelected.id
-                        }
-                        self.axios.post('/servers', data)
-                            .then((response) => {
-                                self.axios.get('/servers/' + response.data.id)
-                                    .then((response) => {
-                                        var server = response.data;
-                                        var currentState = server.status
-                                        var interval = setInterval(() => {
-                                                self.axios.get('/servers/' + server.id)
-                                                    .then((response) => {
-                                                        server = response.data
-                                                        if (server.status != currentState) {
-                                                            self.request = info.SUCCESS;
-                                                            clearInterval(interval);
-                                                        }else{
-                                                          console.log('attemp ' + server);
-                                                        }
-                                                    }).catch((err) => {
-                                                        console.log(err);
-                                                    });
-                                            },
-                                            2000);
-                                    }).catch((err) => {
-                                        console.log(err);
-                                    });
-                            }).catch((err) => {
-                                console.log(err);
-                            })
+            createServer() {
+                var self = this;
+                if (self.nameInstance == "" || self.nameInstance.indexOf(' ') >= 0) {
+                    self.$parent.$emit('alert-message', {
+                        text: info.INVALID_NAME,
+                        type: "warning"
+                    });
+                } else {
+                    self.request = info.WAIT
+                    self.msg = info.CREATE_SERVER_MSG + self.nameInstance
+                    var data = {
+                        'name': self.nameInstance,
+                        'image': self.imageSelected.id,
+                        'flavor': self.flavorSelected.id
                     }
+                    self.axios.post('/servers', data)
+                        .then((response) => {
+                            self.axios.get('/servers/' + response.data.id)
+                                .then((response) => {
+                                    var server = response.data;
+                                    var currentState = server.status
+                                    var interval = setInterval(() => {
+                                            self.axios.get('/servers/' + server.id)
+                                                .then((response) => {
+                                                    server = response.data
+                                                    if (server.status != currentState) {
+                                                        self.request = info.SUCCESS;
+                                                        self.$parent.$emit('alert-message', {
+                                                            text: info.CREATED,
+                                                            type: "success"
+                                                        });
+                                                        clearInterval(interval);
+                                                    } else {
+                                                        console.log('attemp ' + server.status);
+                                                    }
+                                                }).catch((err) => {
+                                                    console.log(err);
+                                                });
+                                        },
+                                        2000);
+                                }).catch((err) => {
+                                    console.log(err);
+                                });
+                        }).catch((err) => {
+                            console.log(err);
+                        })
                 }
+            }
         }
 }
 

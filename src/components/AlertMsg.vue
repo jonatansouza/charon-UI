@@ -4,50 +4,45 @@
     text-decoration: none;
     color: inherit;
 }
-
+/* Enter and leave animations can use different */
+/* durations and timing functions.              */
+.slide-fade-enter-active {
+  transition: all .9s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for <2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
 </style>
 
 <template lang="html">
-
-<div id="alert-message" class="text-center" v-if="message">
-    <div :class="'alert alert-dismissible alert-'+message.type" role="alert" transition="fade">
-        <!-- {{message.handleShowEvent()}} -->
-        <button type="button" class="close" v-show="message.important" @click="message.remove()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <strong>{{message.type}} </strong> {{message.text}}
+<transition name="slide-fade">
+    <div id="alert-message" class="text-center" v-if="message">
+        <div :class="'alert alert-dismissible alert-'+message.type" role="alert" transition="fade">
+            <!-- {{message.handleShowEvent()}} -->
+            <button type="btn btn-default" class="close" @click="$emit('close')">
+                <strong><span aria-hidden="true">&times;</span></strong>
+            </button>
+            <strong>{{uppercase(message.type)}}: </strong> {{message.text}}
+        </div>
     </div>
-
-
-</div>
+</transition>
 
 </template>
 
 <script>
 
 export default {
-    data() {
-            return {
-                message: {}
-            }
-        },
-        created() {
-            var self = this;
-            self.$on('alert-message', function(message) {
-                console.log('alert-message');
-                var self = this;
-                self.createAlertMessage(message)
-            })
-        },
-        methods: {
-            createAlertMessage(message) {
-                var self = this;
-                self.message = {
-                    text: (typeof message.text == 'undefined') ? 'EMPTY MESSAGE' : message.text,
-                    type: (typeof message.type == 'undefined') ? 'info' : message.type
-                }
-            }
-        }
+    props: ['message'],
+    methods: {
+      uppercase (msg) {
+        return msg.toUpperCase();
+      }
+    }
 }
 
 </script>

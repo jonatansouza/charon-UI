@@ -35,20 +35,6 @@ const actions = {
             commit(types.SET_SERVER, server)
           }).catch((err) => console.log(err))
       }).catch((err) => console.log(err))
-  },
-  addFloatingIp({
-    commit
-  }, server) {
-    console.log(server);
-    Vue.axios.post('/server/ip', server)
-      .then((response) => {
-        console.log(response);
-      }).catch((err) => console.log(err))
-  },
-  resetRequests({
-    commit
-  }) {
-    commit(types.REQUEST_SERVER_RESET)
   }
 }
 

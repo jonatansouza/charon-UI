@@ -21,38 +21,48 @@
     <default-page v-if="!alive"></default-page>
     <div v-if="alive">
         <wait v-if="request == info.WAIT " :msg="msg"></wait>
-        <div class="container text-center" v-if="request != info.WAIT">
-            <h1 class="page-header">{{server.name}} <small>Server</small></h1>
-            <img :src="loadImg()" class="img-thumbnail-o" alt="avatar">
-            <ul class="list-unstyled">
-                <li><strong>Status: </strong>{{server.status}}</li>
-                <li><strong>ID: </strong>{{server.id}}</li>
-                <li><strong>Name: </strong>{{server.name}}</li>
-                <li><strong>Created: </strong>{{formatDate(server.created)}}</li>
-                <li><strong>Last Update: </strong>{{formatDate(server.updated)}}</li>
-                <li><strong>Image ID: </strong>{{server.image.id}}</li>
-                <li><strong>Image name: </strong>{{server.image.name}}</li>
-                <li><strong>Image status: </strong>{{server.image.status}}</li>
-                <li><strong>Image Created: </strong>{{formatDate(server.image.created)}}</li>
-            </ul>
-            <div v-if="server.addresses">
-                <ul class="list-unstyled" v-for="(address, index) in server.addresses.private">
-                    <li><strong>IP {{index+1}}</strong></li>
-                    <li><strong>version</strong>: IPV{{address.version}}</li>
-                    <li><strong>Address</strong>: {{address.addr}}</li>
-                    <li><strong>Type</strong>: {{address['OS-EXT-IPS:type']}}</li>
+        <div class="container" v-if="request != info.WAIT">
+            <section id="content" class="text-center">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <img :src="loadImg()" class="img-thumbnail-o" alt="avatar">
+                        <h3>General Information</h3>
+                        <ul class="list-unstyled">
+                            <li><strong>Status: </strong>{{server.status}}</li>
+                            <li><strong>ID: </strong>{{server.id}}</li>
+                            <li><strong>Name: </strong>{{server.name}}</li>
+                            <li><strong>Created: </strong>{{formatDate(server.created)}}</li>
+                            <li><strong>Last Update: </strong>{{formatDate(server.updated)}}</li>
+                            <li><strong>Image ID: </strong>{{server.image.id}}</li>
+                            <li><strong>Image name: </strong>{{server.image.name}}</li>
+                            <li><strong>Image status: </strong>{{server.image.status}}</li>
+                            <li><strong>Image Created: </strong>{{formatDate(server.image.created)}}</li>
+                        </ul>
+                    </li>
                 </ul>
-            </div>
-            <h1 class="page-header">Tools</h1>
-            <div class="mobile">
-                <!-- CUSTOM BUTTONS MOBILE -->
-            </div>
-            <div class="desktop">
-                <a @click="changeState" class="btn btn-default btn-lg " :class="statusServer()" data-toggle="tooltip" data-placement="left" title="Power-on or Power-of Server"><i class="fa fa-power-off"></i></a>
-                <a class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom" title="Create a template of Server"><i class="fa fa-clone"></i></a>
-                <a @click="associateFloatingIp" class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="left" title="Associate Floating IP"><i class="fa fa-desktop"></i></a>
-                <a @click="showModal = true" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="right" title="Delete your Server"><i class="fa fa-trash"></i></a>
-            </div>
+                <ul class="list-group" v-for="(address, index) in server.addresses.private">
+                    <li class="list-group-item">
+                        <ul class="list-unstyled">
+                            <li><strong>IP {{index+1}}</strong></li>
+                            <li><strong>version</strong>: IPV{{address.version}}</li>
+                            <li><strong>Address</strong>: {{address.addr}}</li>
+                            <li><strong>Type</strong>: {{address['OS-EXT-IPS:type']}}</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            <section id="tools" class="text-center">
+                <h1>Tools</h1>
+                <div class="mobile">
+                    <!-- CUSTOM BUTTONS MOBILE -->
+                </div>
+                <div class="desktop">
+                    <a @click="changeState" class="btn btn-default btn-lg " :class="statusServer()" data-toggle="tooltip" data-placement="left" title="Power-on or Power-of Server"><i class="fa fa-power-off"></i></a>
+                    <a class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom" title="Create a template of Server"><i class="fa fa-clone"></i></a>
+                    <a @click="associateFloatingIp" class="btn btn-default btn-lg" :class="floatingIpCustom()" data-toggle="tooltip" data-placement="left" title="Associate Floating IP"><i class="fa fa-signal"></i></a>
+                    <a @click="showModal = true" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="right" title="Delete your Server"><i class="fa fa-trash"></i></a>
+                </div>
+            </section>
             <modal v-if="showModal" :component="server" @close="showModal = false"></modal>
         </div>
     </div>
@@ -115,20 +125,76 @@ export default {
                         }
                     });
             },
+            floatingIpCustom() {
+                var self = this;
+                if (self.server) {
+                    var floating = false;
+                    self.server.addresses.private.forEach((el, idx, array) => {
+                        if (el['OS-EXT-IPS:type'] == info.OPENSTACK_FLOATING) {
+                            console.log('equals');
+                            floating = true;
+                        }
+                    });
+                    return floating ? 'btn-warning' : 'btn-info'
+                }
+            },
             statusServer() {
                 var self = this;
-                if (self.request == info.WAIT) {
-                    return 'btn-default disabled'
-                } else {
-                    return (self.server.status == self.info.OPENSTACK_STOP) ? 'btn-default' : 'btn-warning'
-                }
+                return (self.server.status == self.info.OPENSTACK_STOP) ? 'btn-default' : 'btn-warning'
+
             },
             loadImg: () => {
                 return require('../assets/server.svg');
             },
             associateFloatingIp() {
                 var self = this;
-                self.$store.dispatch('addFloatingIp', self.server);
+                var floating = null;
+                self.server.addresses.private.forEach((el, idx, array) => {
+                    if (el['OS-EXT-IPS:type'] == info.OPENSTACK_FLOATING) {
+                        floating = el.addr;
+                    }
+                });
+                if (floating) {
+                    self.msg = info.FLOATING_IP_REMOVE_SERVER_MSG;
+                    self.request = info.WAIT;
+                    self.axios.post('/server/ip/rm', {
+                        server: self.server,
+                        floatingIp: floating
+                    }).then((response) => {
+                        self.fetchServer();
+                        self.request = info.SUCCESS
+                        self.$parent.$emit('alert-message', {
+                            text: info.FLOATING_IP_REMOVE + response.data.server,
+                            type: info.SUCCESS
+                        });
+                    }).catch((err) => {
+                        self.request = info.FAILURE;
+                        self.alertMessage({
+                            text: err.response.data,
+                            type: info.DANGER,
+                            important: true
+                        });
+                    });
+                } else {
+                    self.msg = info.FLOATING_IP_ADD_SERVER_MSG;
+                    self.request = info.WAIT;
+                    self.axios.post('/server/ip/add', self.server)
+                        .then((response) => {
+                            self.fetchServer();
+                            self.request = info.SUCCESS
+                            self.$parent.$emit('alert-message', {
+                                text: info.FLOATING_IP_ADD + response.data.ip,
+                                type: info.SUCCESS
+                            });
+                        }).catch((err) => {
+                            self.request = info.FAILURE;
+                            self.alertMessage({
+                                text: err.response.data,
+                                type: info.DANGER,
+                                important: true
+                            });
+                        });
+                }
             },
             deleteServer() {
                 var self = this;
@@ -141,13 +207,16 @@ export default {
                                 self.axios.get('/servers/' + server.id)
                                     .then((response) => {
                                         server = response.data
-                                        console.log('attemp delete '+ server.id);
+                                        console.log('attemp delete ' + server.id);
                                     }).catch((err) => {
                                         if (err.response.data.statusCode == 404) {
                                             self.request = info.SUCCESS;
                                             self.alive = false;
                                             self.request = info.SUCCESS;
-                                            self.alertMessage('Server Deleted!', 'info')
+                                            self.alertMessage({
+                                                text: info.DELETE_SERVER_MSG + server.name,
+                                                type: info.INFO
+                                            })
                                             clearInterval(interval);
                                         }
                                     });
@@ -190,13 +259,9 @@ export default {
                     return moment(String(value)).format('MM/DD/YYYY hh:mm')
                 }
             },
-            alertMessage(msg, type) {
+            alertMessage(message) {
                 var self = this;
-                var message = {
-                    text: msg,
-                    type: type
-                }
-                self.$parent.$refs['alert-message'].$emit('alert-message', message);
+                self.$parent.$emit('alert-message', message);
             }
     }
 }
