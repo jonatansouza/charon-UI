@@ -1,4 +1,4 @@
-<style scoped>
+<style lang="css">
 
 
 
@@ -7,30 +7,30 @@
 <template lang="html">
 
 <div class="container">
-    <div class="row">
-        <wait :msg=msg v-if="request == info.WAIT"></wait>
-        <div v-if="request != info.WAIT">
-            <h3 class="text-center">Create Server</h3>
+    <wait :msg=msg v-if="request == info.WAIT"></wait>
+    <div v-if="request != info.WAIT">
+        <h3 class="text-center">Create Volume</h3>
+        <div class="form-horizontal">
             <div class="form-group">
                 <label for="instance">Name</label>
-                <input type="text" class="form-control" id="instance" v-model="nameInstance" placeholder="Server Name" required>
+                <input type="text" class="form-control" id="instance" v-model="nameVolume" placeholder="Volume Name" required>
             </div>
             <div class="form-group">
-                <label for="image">Image</label>
-                <select class="form-control" v-model="imageSelected">
-                    <option v-for="(image, index) in images" :value="image">{{image.name}}</option>
-                </select>
+                <label for="desc">description</label>
+                <input type="text" class="form-control" id="desc" v-model="descriptionVolume" placeholder="Volume description" required>
             </div>
             <div class="form-group">
-                <label for="flavor">Flavor</label>
-                <select class="form-control" v-model="flavorSelected">
-                    <option v-for="flavor in flavors" :value="flavor">{{flavor.name}}</option>
-                </select>
+                <label for="size">Size</label>
+                <div class="range range-primary">
+                    <input type="range" name="range" min="1" max="100" v-model="sizeVolume">
+                    <output>{{sizeVolume}} GB</output>
+                </div>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block" @click="createServer()">Create</button>
+                <button @click="createVolume" class="btn btn-primary btn-block">Create</button>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -40,70 +40,60 @@
 
 import Wait from 'components/Wait'
 import * as info from '../store/default-messages'
-import {
-    mapGetters,
-    mapAction
-}
-from 'vuex'
+
 export default {
     data() {
             return {
-                imageSelected: {},
-                flavorSelected: {},
-                nameInstance: "",
-                nameInvalid: false,
+                sizeVolume: 5,
+                descriptionVolume: "",
+                nameVolume: "",
+                request: "",
                 info: info,
-                request: ""
             }
         },
         components: {
             Wait
         },
-        computed: mapGetters({
-            images: 'allImages',
-            flavors: 'allFlavors'
-        }),
         created() {
             var self = this;
-            self.info = info;
-            self.$store.dispatch('getAllFlavors');
-            self.$store.dispatch('getAllImages');
+            self.$store.dispatch('getAllTypes');
         },
         methods: {
-            createServer() {
+            createVolume() {
                     var self = this;
-                    if (self.nameInstance == "" || self.nameInstance.indexOf(' ') >= 0) {
+                    if (self.nameVolume == "" || self.nameVolume.indexOf(' ') >= 0) {
                         self.$parent.$emit('alert-message', {
                             text: info.INVALID_NAME,
                             type: "warning"
                         });
                     } else {
                         self.request = info.WAIT
-                        self.msg = info.CREATE_SERVER_MSG + self.nameInstance
+                        self.msg = info.CREATE_VOLUME_MSG + self.nameVolume
                         var data = {
-                            'name': self.nameInstance,
-                            'image': self.imageSelected.id,
-                            'flavor': self.flavorSelected.id
+                            name: self.nameVolume, // required
+                            description: self.descriptionVolume, // required
+                            size: self.sizeVolume // 100-1000 gb
+                                //volumeType: typeSelected // optional, defaults to spindles
                         }
-                        self.axios.post('/servers', data)
+                        self.axios.post('/volumes', data)
                             .then((response) => {
-                                self.axios.get('/servers/' + response.data.id)
+                                self.axios.get('/volumes/' + response.data.id)
                                     .then((response) => {
-                                        var server = response.data;
-                                        var currentState = server.status
+                                        var volume = response.data;
+                                        var currentState = volume.status
                                         var interval = setInterval(() => {
-                                                self.axios.get('/servers/' + server.id)
+                                                self.axios.get('/volumes/' + volume.id)
                                                     .then((response) => {
-                                                        server = response.data
-                                                        if (server.status != currentState) {
+                                                        volume = response.data
+                                                        if (volume.status != currentState) {
                                                             self.request = info.SUCCESS;
-                                                            self.alertMessage({
+                                                            alertMessage({
                                                                 text: info.CREATED,
-                                                                type: "success"
+                                                                type: info.SUCCESS
                                                             });
                                                             clearInterval(interval);
                                                         } else {
-                                                            console.log('attemp ' + server.status);
+                                                            console.log('attemp ' + volume.status);
                                                         }
                                                     }).catch((err) => {
                                                         console.log(err);

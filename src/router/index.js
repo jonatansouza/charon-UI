@@ -7,6 +7,7 @@ import Volumes from 'components/Volumes'
 import Volume from 'components/Volume'
 import Login from 'components/Login'
 import CreateServer from 'components/CreateServer'
+import CreateVolume from 'components/CreateVolume'
 
 
 Vue.use(Router)
@@ -42,6 +43,11 @@ export default new Router({
       path: '/volumes/:id',
       name: 'volume',
       component: Volume
+    },
+    {
+      path: '/create-volume',
+      name: 'createVolume',
+      component: CreateVolume
     },
     {
       path: '/login',

@@ -58,12 +58,12 @@
                 </div>
                 <div class="desktop">
                     <a @click="changeState" class="btn btn-default btn-lg " :class="statusServer()" data-toggle="tooltip" data-placement="left" title="Power-on or Power-of Server"><i class="fa fa-power-off"></i></a>
-                    <a class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom" title="Create a template of Server"><i class="fa fa-clone"></i></a>
+                    <a @click="modalHandler('info')" class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom" title="Create a template of Server"><i class="fa fa-clone"></i></a>
                     <a @click="associateFloatingIp" class="btn btn-default btn-lg" :class="floatingIpCustom()" data-toggle="tooltip" data-placement="left" title="Associate Floating IP"><i class="fa fa-signal"></i></a>
-                    <a @click="showModal = true" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="right" title="Delete your Server"><i class="fa fa-trash"></i></a>
+                    <a @click="modalHandler('danger')" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="right" title="Delete your Server"><i class="fa fa-trash"></i></a>
                 </div>
             </section>
-            <modal v-if="showModal" :component="server" @close="showModal = false"></modal>
+            <modal v-if="showModal" :component="server" :category="category" @close="showModal = false"></modal>
         </div>
     </div>
 
@@ -74,7 +74,7 @@
 <script>
 
 import moment from 'moment'
-import Modal from 'components/ModalDanger'
+import Modal from 'components/Modal'
 import Wait from 'components/Wait'
 import AlertMsg from 'components/AlertMsg'
 import DefaultPage from 'components/DefaultPage'
@@ -89,7 +89,8 @@ export default {
             info: {},
             request: info.WAIT,
             alive: true,
-            server: {}
+            server: {},
+            category: ""
         }
     },
     components: {
@@ -102,8 +103,11 @@ export default {
         var self = this;
         self.info = info;
         self.fetchServer();
-        self.$on('delete', function() {
+        self.$on('deleteComponent', function() {
             self.deleteServer();
+        });
+        self.$on('createComponent', function(name) {
+            self.createTemplate(name);
         });
 
     },
@@ -125,13 +129,17 @@ export default {
                         }
                     });
             },
+            modalHandler(category) {
+              var self = this;
+              self.category = category;
+              self.showModal = true;
+            },
             floatingIpCustom() {
                 var self = this;
                 if (self.server) {
                     var floating = false;
                     self.server.addresses.private.forEach((el, idx, array) => {
                         if (el['OS-EXT-IPS:type'] == info.OPENSTACK_FLOATING) {
-                            console.log('equals');
                             floating = true;
                         }
                     });
@@ -195,6 +203,30 @@ export default {
                             });
                         });
                 }
+            },
+            createTemplate(name) {
+                var self = this;
+                self.msg = info.TEMPLATE_SERVER_MSG + name;
+                self.request = info.WAIT;
+                self.axios.post('/images', {
+                        name: name,
+                        server: self.server.id
+                    })
+                    .then((response) => {
+                        self.request = info.SUCCESS;
+                        self.alertMessage({
+                            text: response,
+                            type: info.SUCCESS
+                        });
+                    })
+                    .catch((err) => {
+                        self.request = info.FAILURE
+                        self.alertMessage({
+                            text: err.response.data.result,
+                            type: info.DANGER,
+                            important: true
+                        });
+                    });
             },
             deleteServer() {
                 var self = this;

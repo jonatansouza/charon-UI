@@ -13,6 +13,9 @@ export const REQUEST_SERVER_RESET = 'REQUEST_SERVER_RESET'
 export const SET_VOLUMES = 'SET_VOLUMES'
 export const SET_VOLUME = 'SET_VOLUME'
 
+export const SET_TYPES = 'SET_TYPES'
+export const SET_TYPE = 'SET_TYPE'
+
 export const SET_IMAGES = 'SET_IMAGES'
 export const SET_IMAGE = 'SET_IMAGE'
 
