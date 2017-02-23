@@ -7,7 +7,7 @@
 <template>
 
 <div id="app">
-    <navbar></navbar>
+    <navbar :apiConnect="apiIsAlive"></navbar>
     <alert-msg @close="showAlertMessage = false" v-if="showAlertMessage" :message="msg"></alert-msg>
     <router-view></router-view>
 </div>
@@ -24,10 +24,20 @@ export default {
         Navbar,
         AlertMsg
     },
+    sockets: {
+        connect() {
+                var self = this;
+                this.apiIsAlive = true;
+            },
+            disconnect() {
+                this.apiIsAlive = false;
+            }
+    },
     data() {
         return {
             showAlertMessage: false,
-            msg: {}
+            msg: {},
+            apiIsAlive: true
         }
     },
     created() {
@@ -40,7 +50,9 @@ export default {
             }
             self.showAlertMessage = true;
             if (!self.msg.important) {
-                setTimeout(() => {self.showAlertMessage = false}, 5000);
+                setTimeout(() => {
+                    self.showAlertMessage = false
+                }, 5000);
             }
         });
     }

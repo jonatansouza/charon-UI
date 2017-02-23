@@ -1,6 +1,7 @@
 //OPENSTACK
 export const OPENSTACK_RUNNING = 'RUNNING'
 export const OPENSTACK_STOP = 'STOPPED'
+export const OPENSTACK_DELETE_IMAGE = 'DELETED'
 export const OPENSTACK_PROVISING = 'PROVISING'
 export const OPENSTACK_FLOATING = 'floating'
 
@@ -27,7 +28,7 @@ export const INVALID_NAME = 'Invalid Name'
 export const CREATED = 'Created Successful'
 export const FLOATING_IP_ADD = 'Floating IP added to Server '
 export const FLOATING_IP_REMOVE = 'Floating IP removed from Server '
-
+export const TEMPLATE_SERVER_ALERT = 'Template Created '
 
 //VOLUMES waiting messages
 export const CREATE_VOLUME_MSG = 'Creating Volume '
@@ -44,3 +45,12 @@ export const ATTACHING = 'attaching'
 export const DETACHING = 'detaching'
 export const ATTACH_VOLUME = 'Volume attached '
 export const DETACH_VOLUME = 'Volume detached '
+
+
+
+//IMAGES waiting messages
+export const FETCH_IMAGES_MSG = 'Fetching Images from API '
+export const DELETE_IMAGE_WAIT = 'Deleting Image from API '
+
+//IMAGES alert messages
+export const DELETE_IMAGE_MSG = 'Image Deleted '

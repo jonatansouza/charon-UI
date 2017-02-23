@@ -8,6 +8,8 @@ import Volume from 'components/Volume'
 import Login from 'components/Login'
 import CreateServer from 'components/CreateServer'
 import CreateVolume from 'components/CreateVolume'
+import Images from 'components/Images'
+import Flavors from 'components/Flavors'
 
 
 Vue.use(Router)
@@ -48,6 +50,16 @@ export default new Router({
       path: '/create-volume',
       name: 'createVolume',
       component: CreateVolume
+    },
+    {
+      path: '/images',
+      name: 'images',
+      component: Images
+    },
+    {
+      path: '/flavors',
+      name: 'flavors',
+      component: Flavors
     },
     {
       path: '/login',

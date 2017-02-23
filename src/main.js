@@ -5,12 +5,14 @@ import App from './App'
 import router from './router'
 import store from './store'
 import axios from './lib/axios'
+import socket from './lib/socket'
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   store,
   router,
+  socket,
   template: '<App/>',
   components: { App }
 })

@@ -187,7 +187,7 @@ export default {
         methods: {
             deleteComponent() {
                     var self = this;
-                    self.$parent.$emit('deleteComponent');
+                    self.$parent.$emit('deleteComponent', self.component);
                     self.$emit('close');
                 },
                 iconSet(item) {

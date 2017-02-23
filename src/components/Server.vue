@@ -130,9 +130,9 @@ export default {
                     });
             },
             modalHandler(category) {
-              var self = this;
-              self.category = category;
-              self.showModal = true;
+                var self = this;
+                self.category = category;
+                self.showModal = true;
             },
             floatingIpCustom() {
                 var self = this;
@@ -221,11 +221,18 @@ export default {
                     })
                     .catch((err) => {
                         self.request = info.FAILURE
-                        self.alertMessage({
-                            text: err.response.data.result,
-                            type: info.DANGER,
-                            important: true
-                        });
+                        if (typeof err.response.data.result == 'undefined') {
+                          self.alertMessage({
+                              text: info.TEMPLATE_SERVER_ALERT,
+                              type: info.SUCCESS
+                          });
+                        } else {
+                            self.alertMessage({
+                                text: err.response.data.result,
+                                type: info.DANGER,
+                                important: true
+                            });
+                        }
                     });
             },
             deleteServer() {
