@@ -24,3 +24,5 @@ export const SET_FLAVOR = 'SET_FLAVOR'
 
 export const SET_NETWORKS = 'SET_NETWORKS'
 export const SET_NETWORK = 'SET_NETWORK'
+
+export const SET_LIMITS = 'SET_LIMITS'

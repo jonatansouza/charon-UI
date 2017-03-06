@@ -21,11 +21,14 @@
                     <option v-for="(image, index) in images" :value="image">{{image.name}}</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group" v-if="flavors != null">
                 <label for="flavor">Flavor</label>
                 <select class="form-control" v-model="flavorSelected">
-                    <option v-for="flavor in flavors" :value="flavor">{{flavor.name}}</option>
+                    <option v-for="(flavor, index) in flavors" :value="flavor">{{flavor.name}}</option>
                 </select>
+            </div>
+            <div class="form-group" v-if="flavors.length">
+              <flavor-limits :flavor="flavorSelected || flavors[0]" :limits="limits"></flavor-limits>
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block" @click="createServer()">Create</button>
@@ -39,6 +42,7 @@
 <script>
 
 import Wait from 'components/Wait'
+import FlavorLimits from 'components/FlavorLimits'
 import * as info from '../store/default-messages'
 import {
     mapGetters,
@@ -48,8 +52,8 @@ from 'vuex'
 export default {
     data() {
             return {
-                imageSelected: {},
-                flavorSelected: {},
+                imageSelected: null,
+                flavorSelected: null,
                 nameInstance: "",
                 nameInvalid: false,
                 info: info,
@@ -57,16 +61,18 @@ export default {
             }
         },
         components: {
-            Wait
+            Wait, FlavorLimits
         },
         computed: mapGetters({
             images: 'allImages',
-            flavors: 'allFlavors'
+            flavors: 'allFlavors',
+            limits: 'allLimits'
         }),
         created() {
             var self = this;
             self.info = info;
             self.$store.dispatch('getAllFlavors');
+            self.$store.dispatch('getAllLimits');
             self.$store.dispatch('getAllImages');
         },
         methods: {
