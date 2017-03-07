@@ -10,7 +10,7 @@
 <template>
 
 <div class="container-fluid">
-    <h1 class="page-header">Servers <span class="adjust-btn"><a href="#/create-server" class="btn btn-primary btn-lg btn-rounded"><i class="fa fa-plus"></i></a></span></h1>
+    <h1 class="page-header">Servers <small>Instances {{limits.totalInstancesUsed}}/{{limits.maxTotalInstances}}</small> <span class="adjust-btn"><a href="#/create-server" class="btn btn-primary btn-lg btn-rounded"><i class="fa fa-plus"></i></a></span></h1>
     <div v-if="servers.length">
         <div v-for="(server,index) in servers" :class="(index + 1) % 4 ? '' : 'row'">
             <card :card="server" imageUrl="server" category="servers" class="col-md-3 "></card>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-
+import {mapGetters} from 'vuex'
 import Card from 'components/Card'
 import Wait from 'components/Wait'
 import * as info from '../store/default-messages'
@@ -41,8 +41,12 @@ export default {
     components: {
         Card, Wait
     },
+    computed: mapGetters({
+        limits: 'allLimits'
+    }),
     created() {
         var self = this;
+        self.$store.dispatch('getAllLimits');
         self.info = info;
         self.msg = info.FETCH_SERVERS_MSG;
         self.request = info.WAIT;
