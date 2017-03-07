@@ -62,6 +62,12 @@
                     <a @click="associateFloatingIp" class="btn btn-default btn-lg" :class="floatingIpCustom()" data-toggle="tooltip" data-placement="left" title="Associate Floating IP"><i class="fa fa-signal"></i></a>
                     <a @click="modalHandler('danger')" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="right" title="Delete your Server"><i class="fa fa-trash"></i></a>
                 </div>
+                <div class="mobile">
+                    <a @click="changeState" class="btn btn-default btn-lg btn-block" :class="statusServer()" data-toggle="tooltip" data-placement="left" title="Power-on or Power-of Server"><i class="fa fa-power-off"></i> Power</a>
+                    <a @click="modalHandler('info')" class="btn btn-default btn-lg btn-block" data-toggle="tooltip" data-placement="bottom" title="Create a template of Server"><i class="fa fa-clone"></i> Generate Template</a>
+                    <a @click="associateFloatingIp" class="btn btn-default btn-lg btn-block" :class="floatingIpCustom()" data-toggle="tooltip" data-placement="left" title="Associate Floating IP"><i class="fa fa-signal"></i> Floating Ip</a>
+                    <a @click="modalHandler('danger')" class="btn btn-danger btn-lg btn-block" data-toggle="tooltip" data-placement="right" title="Delete your Server"><i class="fa fa-trash"></i> Delete</a>
+                </div>
             </section>
             <modal v-if="showModal" :component="server" :category="category" @close="showModal = false"></modal>
         </div>

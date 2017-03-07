@@ -39,12 +39,13 @@
             </section>
             <section id="tools" class="text-center">
                 <h1>Tools</h1>
-                <div class="mobile">
-                    <!-- CUSTOM BUTTONS MOBILE -->
-                </div>
-                <div class="">
+                <div class="desktop">
                     <a @click="attachDetachVolume('volume')" class="btn btn-default btn-lg" :class="statusVolume()" data-toggle="tooltip" data-placement="bottom" title="attach or dettach Volume"><i class="fa fa-paperclip"></i></a>
                     <a @click="modalHandler('danger')" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="right" title="Delete your Volume"><i class="fa fa-trash"></i></a>
+                </div>
+                <div class="mobile">
+                    <a @click="attachDetachVolume('volume')" class="btn btn-default btn-lg btn-block" :class="statusVolume()" data-toggle="tooltip" data-placement="bottom" title="attach or dettach Volume"><i class="fa fa-paperclip"></i> Attach / Detach</a>
+                    <a @click="modalHandler('danger')" class="btn btn-danger btn-lg btn-block" data-toggle="tooltip" data-placement="right" title="Delete your Volume"><i class="fa fa-trash"></i> Delete</a>
                 </div>
             </section>
             <modal v-if="showModal" :component="volume" :itens="servers" :category="category" @close="showModal = false"></modal>
