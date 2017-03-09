@@ -40,7 +40,7 @@
                         </ul>
                     </li>
                 </ul>
-                <ul class="list-group" v-for="(address, index) in server.addresses.private">
+                <ul class="list-group" v-if="server.addresses.private" v-for="(address, index) in server.addresses.private">
                     <li class="list-group-item">
                         <ul class="list-unstyled">
                             <li><strong>IP {{index+1}}</strong></li>
@@ -144,11 +144,13 @@ export default {
                 var self = this;
                 if (self.server) {
                     var floating = false;
-                    self.server.addresses.private.forEach((el, idx, array) => {
-                        if (el['OS-EXT-IPS:type'] == info.OPENSTACK_FLOATING) {
-                            floating = true;
-                        }
-                    });
+                    if(self.server.addresses.private){
+                        self.server.addresses.private.forEach((el, idx, array) => {
+                            if (el['OS-EXT-IPS:type'] == info.OPENSTACK_FLOATING) {
+                                floating = true;
+                            }
+                        });
+                    }
                     return floating ? 'btn-warning' : 'btn-info'
                 }
             },

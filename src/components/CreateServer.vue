@@ -17,17 +17,22 @@
             </div>
             <div class="form-group">
                 <label for="image">Image</label>
-                <select class="form-control" v-model="imageSelected">
+                <select class="form-control" v-model="imageSelected = images[0]">
                     <option v-for="(image, index) in images" :value="image">{{image.name}}</option>
                 </select>
             </div>
             <div class="form-group" v-if="flavors != null">
                 <label for="flavor">Flavor</label>
-                <select class="form-control" v-model="flavorSelected">
+                <select class="form-control" v-model="flavorSelected = flavors[2]">
                     <option v-for="(flavor, index) in flavors" :value="flavor">{{flavor.name}}</option>
                 </select>
             </div>
+            <div class="form-group">
+                <label for="image">Cloud Init</label>
+                <textarea rows="5" class="form-control" v-model="cloudInit" placeholder="Leave Empty for defaut cloud init"></textarea>
+            </div>
             <div class="form-group" v-if="flavors.length">
+            <h4 class="page-header">Server Resources</h4>
               <flavor-limits :flavor="flavorSelected || flavors[0]" :limits="limits"></flavor-limits>
             </div>
             <div class="form-group">
@@ -55,6 +60,7 @@ export default {
                 imageSelected: null,
                 flavorSelected: null,
                 nameInstance: "",
+                cloudInit: "",
                 nameInvalid: false,
                 info: info,
                 request: ""
@@ -68,7 +74,7 @@ export default {
             flavors: 'allFlavors',
             limits: 'allLimits'
         }),
-        created() {
+        mounted() {
             var self = this;
             self.info = info;
             self.$store.dispatch('getAllFlavors');
@@ -91,17 +97,21 @@ export default {
                             'image': self.imageSelected.id,
                             'flavor': self.flavorSelected.id
                         }
+                        if(self.cloudInit){
+                            data.cloudConfig = new Buffer(self.cloudInit).toString('base64');
+                        }
                         self.axios.post('/servers', data)
                             .then((response) => {
                                 self.axios.get('/servers/' + response.data.id)
                                     .then((response) => {
                                         var server = response.data;
                                         var currentState = server.status
+                                        var attemp = 0;
                                         var interval = setInterval(() => {
                                                 self.axios.get('/servers/' + server.id)
                                                     .then((response) => {
                                                         server = response.data
-                                                        if (server.status != currentState) {
+                                                        if (server.status != currentState || attemp == 100) {
                                                             self.request = info.SUCCESS;
                                                             self.alertMessage({
                                                                 text: info.CREATED,
@@ -109,7 +119,8 @@ export default {
                                                             });
                                                             clearInterval(interval);
                                                         } else {
-                                                            console.log('attemp ' + server.status);
+                                                            attemp++;
+                                                            console.log(attemp+ 'attemp ' + server.status);
                                                         }
                                                     }).catch((err) => {
                                                         console.log(err);
