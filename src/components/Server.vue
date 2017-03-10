@@ -1,5 +1,7 @@
 <style lang="css">
-
+.btn-dark          { color: #ffffff; background-color: #777; border-color: #555; }
+.btn-dark:hover, .btn-dark:focus, .btn-dark:active, .btn-dark.active, .open .dropdown-toggle.btn-dark
+                        { color: #ffffff; background-color: #888; border-color: #444; }
 @media (min-width: 1024px) {
     .mobile {
         display: none;
@@ -58,6 +60,7 @@
                 </div>
                 <div class="desktop">
                     <a @click="changeState" class="btn btn-default btn-lg " :class="statusServer()" data-toggle="tooltip" data-placement="left" title="Power-on or Power-of Server"><i class="fa fa-power-off"></i></a>
+                    <a v-show="server.status == info.OPENSTACK_RUNNING" :href="consoleUrl" target="_blank" class="btn btn-dark btn-lg" data-toggle="tooltip" data-placement="right" title="Console Access"><i class="fa fa-terminal"></i></a>
                     <a @click="modalHandler('info')" class="btn btn-default btn-lg" data-toggle="tooltip" data-placement="bottom" title="Create a template of Server"><i class="fa fa-clone"></i></a>
                     <a @click="associateFloatingIp" class="btn btn-default btn-lg" :class="floatingIpCustom()" data-toggle="tooltip" data-placement="left" title="Associate Floating IP"><i class="fa fa-signal"></i></a>
                     <a @click="modalHandler('danger')" class="btn btn-danger btn-lg" data-toggle="tooltip" data-placement="right" title="Delete your Server"><i class="fa fa-trash"></i></a>
@@ -96,7 +99,8 @@ export default {
             request: info.WAIT,
             alive: true,
             server: {},
-            category: ""
+            category: "",
+            consoleUrl: "",
         }
     },
     components: {
@@ -128,6 +132,7 @@ export default {
                                 server.image = response.data
                                 self.server = server;
                                 self.request = "";
+                                self.getConsole();
                             }).catch((err) => console.log(err))
                     }).catch((err) => {
                         if (err.response.data.statusCode == 404) {
@@ -139,6 +144,15 @@ export default {
                 var self = this;
                 self.category = category;
                 self.showModal = true;
+            },
+            getConsole(){
+                var self = this;
+                self.axios.get('/console/'+self.server.id).then((response)=>{
+                    self.consoleUrl = response.data.console.url
+                })
+                .catch((err)=>{
+                    console.log(err)
+                });
             },
             floatingIpCustom() {
                 var self = this;
@@ -157,7 +171,6 @@ export default {
             statusServer() {
                 var self = this;
                 return (self.server.status == self.info.OPENSTACK_STOP) ? 'btn-default' : 'btn-warning'
-
             },
             loadImg: () => {
                 return require('../assets/server.svg');
