@@ -42,11 +42,11 @@
                         </ul>
                     </li>
                 </ul>
-                <ul class="list-group" v-if="server.addresses.private" v-for="(address, index) in server.addresses.private">
+                <ul class="list-group" v-if="server.addresses" v-for="(address, index) in getAddresses()">
                     <li class="list-group-item">
                         <ul class="list-unstyled">
                             <li><strong>IP {{index+1}}</strong></li>
-                            <li><strong>version</strong>: IPV{{address.version}}</li>
+                            <li><strong>version</strong>: IPV {{address.version}}</li>
                             <li><strong>Address</strong>: {{address.addr}}</li>
                             <li><strong>Type</strong>: {{address['OS-EXT-IPS:type']}}</li>
                         </ul>
@@ -147,12 +147,18 @@ export default {
             },
             getConsole(){
                 var self = this;
-                self.axios.get('/console/'+self.server.id).then((response)=>{
+                var uri = '/console/'+self.server.id;
+                self.axios.get(uri).then((response)=>{
                     self.consoleUrl = response.data.console.url
+                    console.log(self.consoleUrl)
                 })
                 .catch((err)=>{
                     console.log(err)
                 });
+            },
+            getAddresses(){
+                var self = this;
+                return (self.server.addresses.private || self.server.addresses.public)
             },
             floatingIpCustom() {
                 var self = this;
@@ -178,7 +184,8 @@ export default {
             associateFloatingIp() {
                 var self = this;
                 var floating = null;
-                self.server.addresses.private.forEach((el, idx, array) => {
+                var ipAddresses = (self.server.addresses.private || self.server.addresses.public)
+                ipAddresses.forEach((el, idx, array) => {
                     if (el['OS-EXT-IPS:type'] == info.OPENSTACK_FLOATING) {
                         floating = el.addr;
                     }
